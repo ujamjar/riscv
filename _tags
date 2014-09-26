@@ -1,0 +1,6 @@
+<src/*.ml{,i}>: package(bigarray)
+
+<test/*.byte>: package(bigarray)
+
+<src>: include
+<test>: include
