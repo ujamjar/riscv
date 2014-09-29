@@ -2,5 +2,12 @@
 
 <test/*.byte>: package(bigarray)
 
+<tools/opcodes.ml>: package(re)
+<tools/opcodes.byte>: package(re)
+
 <src>: include
 <test>: include
+<tools>: include
+
+true: debug
+

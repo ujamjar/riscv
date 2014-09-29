@@ -1,17 +1,19 @@
-open Types
+exception RISCV_store_size_too_big
+exception RISCV_load_size_too_big
 
-exception RISCV_store_address_misaligned of int
-exception RISCV_load_address_misaligned of int
+exception RISCV_store_address_misaligned of int * int
+exception RISCV_load_address_misaligned of int * int
 
-val insert_bits : memory -> addr -> cpu_data -> int -> int -> unit
+module Make(T : Types.T) : sig
 
-val store_double : memory -> addr -> cpu_data -> unit
-val store_word : memory -> addr -> cpu_data -> unit
-val store_half : memory -> addr -> cpu_data -> unit
-val store_byte : memory -> addr -> cpu_data -> unit
+  open T
 
-val load_double : memory -> addr -> cpu_data 
-val load_word : memory -> addr -> cpu_data 
-val load_half : memory -> addr -> cpu_data 
-val load_byte : memory -> addr -> cpu_data 
+  val insert_bits : memory -> addr -> cpu_data -> int -> int -> unit
 
+  (** store n memory addr data.  n=1,2,3,4 => 8,16,32,64 *)
+  val store : int -> memory -> addr -> cpu_data -> unit
+
+  (** load  n memory addr.  n=1,2,3,4 => 8,16,32,64 *)
+  val load : int -> memory -> addr -> cpu_data 
+
+end

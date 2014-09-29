@@ -4,21 +4,24 @@ exception RISCV_instruction_not_yet_implemented
 exception RISCV_system_call
 exception RISCV_breakpoint
 
-val i_type : Types.riscv -> Types.instr -> unit
-val r_type : Types.riscv -> Types.instr -> unit
-val lui : Types.riscv -> Types.instr -> unit
-val auipc : Types.riscv -> Types.instr -> unit
-val jal : Types.riscv -> Types.instr -> unit
-val b_type : Types.riscv -> Types.instr -> unit
-val jalr : Types.riscv -> Types.instr -> unit
-val loads : Types.riscv -> Types.instr -> unit
-val stores : Types.riscv -> Types.instr -> unit
-val fence : Types.riscv -> Types.instr -> unit
-val csr : Types.riscv -> Types.instr -> unit
-val sys : Types.riscv -> Types.instr -> unit
-val int32 : Types.riscv -> Types.instr -> unit
-val int32_more : Types.riscv -> Types.instr -> unit
-val atomic : Types.riscv -> Types.instr -> unit
+module Make(T : Types.T) : sig
 
-val execute : Types.riscv -> Types.instr -> unit
+  val i_type : T.riscv -> T.instr -> unit
+  val r_type : T.riscv -> T.instr -> unit
+  val lui : T.riscv -> T.instr -> unit
+  val auipc : T.riscv -> T.instr -> unit
+  val jal : T.riscv -> T.instr -> unit
+  val b_type : T.riscv -> T.instr -> unit
+  val jalr : T.riscv -> T.instr -> unit
+  val loads : T.riscv -> T.instr -> unit
+  val stores : T.riscv -> T.instr -> unit
+  val fence : T.riscv -> T.instr -> unit
+  val csr : T.riscv -> T.instr -> unit
+  val sys : T.riscv -> T.instr -> unit
+  val int32 : T.riscv -> T.instr -> unit
+  val int32_more : T.riscv -> T.instr -> unit
+  val atomic : T.riscv -> T.instr -> unit
 
+  val execute : T.riscv -> T.instr -> unit
+
+end
