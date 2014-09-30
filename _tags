@@ -2,8 +2,8 @@
 
 <test/*.byte>: package(bigarray)
 
-<tools/opcodes.ml>: package(re)
-<tools/opcodes.byte>: package(re)
+<tools/*.ml>: package(re)
+<tools/*.byte>: package(re)
 
 <src>: include
 <test>: include

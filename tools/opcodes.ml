@@ -174,7 +174,7 @@ let load f =
       | Some(x) -> x :: p (line+1) instrs
       | None -> p (line+1) instrs
       | exception e -> begin
-        Printf.printf "exn[%i]: %s\n" line (Printexc.to_string e);
+        Printf.eprintf "exn[%i]: %s\n" line (Printexc.to_string e);
         exit 1
       end
     end
@@ -188,7 +188,7 @@ let map_name n =
   | "or" -> "or_"
   | "and" -> "and_"
   | "xor" -> "xor_"
-  | _ as x -> String.map (function '.' -> '_' | _ as x -> x) x
+  | _ as x -> String.map (function '.' | '@' -> '_' | _ as x -> x) x
 
 let write_asm_ml f instrs = 
   let open Printf in
@@ -199,14 +199,14 @@ let write_asm_ml f instrs =
       | Field((_,n,(_,_)),Ignore) 
       | Field((_,n,(_,_)),Nothing) -> fprintf f "~%s " n
       | _ -> ()) p;
-    fprintf f "=\n";
+    fprintf f "= Types.I.(\n";
     (* function body *)
     let v = List.fold_left (fun acc i ->
       let m i n = Int32.(logor acc (shift_left (of_int i) n)) in
       match i with
       | Field((_,n,(h,l)),Ignore) 
       | Field((_,n,(h,l)),Nothing) -> 
-          fprintf f "  I.(((to_int %s) &: 0x%xl) <<: %i) |:\n" n ((1 lsl (h-l+1))-1) l;
+          fprintf f "  (((of_int %s) &: 0x%xl) <<: %i) |:\n" n ((1 lsl (h-l+1))-1) l;
           acc
       | Field((_,_,(_,l)),Int d) -> m d l
 
@@ -219,22 +219,18 @@ let write_asm_ml f instrs =
       | Range((_,l), Int d) -> m d l
       ) 0l p
     in
-    fprintf f "  0x%lxl\n\n" v
+    fprintf f "  0x%lxl)\n\n" v
   ) instrs
 
 let write_asm_mli f instrs = 
   let open Printf in
   List.iter (fun (n,p) ->
-    printf "val %s : " (map_name n);
+    fprintf f "val %s : " (map_name n);
     List.iter (function
       | Field((_,n,(_,_)),Ignore) 
       | Field((_,n,(_,_)),Nothing) -> fprintf f "%s:int -> " n
       | _ -> ()) p;
-    printf "I.t\n"
+    fprintf f "Types.I.t\n"
   ) instrs
-
-let instrs = load stdin
-let () = write_asm_ml stdout instrs
-let () = write_asm_mli stdout instrs
 
 

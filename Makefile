@@ -7,7 +7,11 @@ sim:
 	ocamlbuild -use-ocamlfind sim.byte
 
 tests:
-	ocamlbuild -use-ocamlfind test_mem.byte test_instr.byte opcodes.byte
+	ocamlbuild -use-ocamlfind test_mem.byte test_instr.byte 
+
+opcodes:
+	ocamlbuild -use-ocamlfind genops.byte
+	./genops.byte
 
 clean:
 	ocamlbuild -clean
