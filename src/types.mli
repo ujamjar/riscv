@@ -42,6 +42,27 @@ module type D = sig
   val of_i : I.t -> t
 end
 
+module Fields : sig
+  type field = [
+    | `rd | `rs1 | `rs2 | `rs3
+    | `aqrl | `pred | `succ | `rm
+    | `imm20 | `jimm20 | `imm12 | `imm12hi
+    | `bimm12hi | `imm12lo | `bimm12lo | `zimm
+    | `shamt | `shamtw | `vseglen
+    | `crd | `crs2 | `crs1 | `crds | `crs2s
+    | `crs2bs | `crs1s | `cimm6 | `cimm10 | `cimm5
+  ]
+  val fields : (field * string * (int * int)) list
+  type value =
+    | Int of int
+    | Ignore
+    | Nothing
+  type t = 
+    | Field of (field * string * (int * int)) * value
+    | Bit of int * value
+    | Range of (int * int) * value
+end
+
 module D32 : D with type t = int32
 module D64 : D with type t = int64
 

@@ -4,6 +4,20 @@ exception RISCV_instruction_not_yet_implemented
 exception RISCV_system_call
 exception RISCV_breakpoint
 
+module Util : sig
+  open Types
+  type 'a t = ('a * (I.t * I.t)) list
+
+  val constant_10 : 'a t -> I.t * I.t
+  val constant_mask : 'a t -> I.t
+  val constant_all : 'a t -> I.t
+  
+  val ranges : I.t -> (int * int) list
+  val partition : 'a t -> (int * int) -> (I.t * 'a t) list
+  val instruction_decoder : 'a t -> (I.t -> 'a)
+  val instruction_decoder_simple : 'a t -> (I.t -> 'a)
+end
+
 module Make(T : Types.T) : sig
 
   val i_type : T.riscv -> T.instr -> unit

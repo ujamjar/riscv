@@ -233,4 +233,31 @@ let write_asm_mli f instrs =
     fprintf f "Types.I.t\n"
   ) instrs
 
+let write_qcheck_suite f instrs = 
+  let open Printf in
+  fprintf f "let suite f n = [\n";
+  List.iter (fun (n,p) ->
+    let args = List.filter (function (Field _) -> true | _ -> false) p in
+    let nargs = List.length args in
+    if nargs <> 0 then begin
+      let sep c l = List.fold_left (fun a b -> a ^ c ^ b) (List.hd l) (List.tl l) in
+      let tuple = sep ", " (List.map (function (Field((_,n,_),_)) -> n) args) in
+      let liftpp = "tuple" ^ string_of_int nargs ^ " " ^
+        sep " " (List.map (function (Field((_,n,(h,l)),_)) -> sprintf "int") args)
+      in
+      let lift = "tuple" ^ string_of_int nargs ^ " " ^
+        sep " " (List.map 
+          (function (Field((_,n,(h,l)),_)) -> sprintf "(int %i)" (1 lsl (h-l+1))) 
+          args)
+      in
+      let args = sep " " (List.map (function (Field((_,n,_),_)) -> "~" ^ n) args) in
+      fprintf f 
+"  QCheck.( mk_test ~name:\"%s\" ~n 
+    ~pp:PP.(QCRV.PP.%s) ~limit:2
+    Arbitrary.(QCRV.%s) 
+    (fun (%s) -> f `%s (Asm.%s %s)));
+" n liftpp lift tuple (map_name n) (map_name n) args;
+    end
+  ) instrs;
+  fprintf f "]\n\n"
 

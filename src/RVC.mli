@@ -37,11 +37,13 @@ type t = [
 | `c_and3
 ]
 
-val mask_match : (t * (Int32.t * Int32.t)) list
+val mask_match : (t * (Types.I.t * Types.I.t)) list
 
-val to_t : Int32.t -> t
+val to_t : Types.I.t -> t
 
-val pretty : Int32.t -> string
+val pretty : Types.I.t -> string
+
+val fields : (t * Types.Fields.t list) list
 
 end
 
@@ -81,6 +83,12 @@ val c_add3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
 val c_sub3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
 val c_or3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
 val c_and3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
+
+end
+
+module Test : sig
+
+val suite : (T.t -> Types.I.t -> bool) -> int -> QCheck.suite
 
 end
 

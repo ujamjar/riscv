@@ -87,6 +87,28 @@ let pretty i =
     ("@rdtimeh" ^ " rd=" ^ (x 11 7))
   | `_rdinstreth ->
     ("@rdinstreth" ^ " rd=" ^ (x 11 7))
+let fields =
+  let open Types.Fields in
+  [
+    (`_slli_rv32, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(0)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`_srli_rv32, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(0)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`_srai_rv32, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(32)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`_frflags, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(1)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_fsflags, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,20),Int(1)); Range((14,12),Int(1)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_fsflagsi, [ Field((`rd,"rd",(11,7)), Nothing); Field((`zimm,"zimm",(19,15)), Nothing); Range((31,20),Int(1)); Range((14,12),Int(5)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_frrm, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(2)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_fsrm, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,20),Int(2)); Range((14,12),Int(1)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_fsrmi, [ Field((`rd,"rd",(11,7)), Nothing); Field((`zimm,"zimm",(19,15)), Nothing); Range((31,20),Int(2)); Range((14,12),Int(5)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_fscsr, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,20),Int(3)); Range((14,12),Int(1)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_frcsr, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_rdcycle, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3072)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_rdtime, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3073)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_rdinstret, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3074)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_rdcycleh, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3200)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_rdtimeh, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3201)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`_rdinstreth, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3202)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+  ]
+
 end
 
 module Asm = struct
@@ -169,6 +191,81 @@ let _rdtimeh ~rd = Types.I.(
 let _rdinstreth ~rd = Types.I.(
   (((of_int rd) &: 0x1fl) <<: 7) |:
   0xc8202073l)
+
+end
+
+module Test = struct
+
+let suite f n = [
+  QCheck.( mk_test ~name:"@slli.rv32" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, shamtw) -> f `_slli_rv32 (Asm._slli_rv32 ~rd ~rs1 ~shamtw)));
+  QCheck.( mk_test ~name:"@srli.rv32" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, shamtw) -> f `_srli_rv32 (Asm._srli_rv32 ~rd ~rs1 ~shamtw)));
+  QCheck.( mk_test ~name:"@srai.rv32" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, shamtw) -> f `_srai_rv32 (Asm._srai_rv32 ~rd ~rs1 ~shamtw)));
+  QCheck.( mk_test ~name:"@frflags" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_frflags (Asm._frflags ~rd)));
+  QCheck.( mk_test ~name:"@fsflags" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (rd, rs1) -> f `_fsflags (Asm._fsflags ~rd ~rs1)));
+  QCheck.( mk_test ~name:"@fsflagsi" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (rd, zimm) -> f `_fsflagsi (Asm._fsflagsi ~rd ~zimm)));
+  QCheck.( mk_test ~name:"@frrm" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_frrm (Asm._frrm ~rd)));
+  QCheck.( mk_test ~name:"@fsrm" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (rd, rs1) -> f `_fsrm (Asm._fsrm ~rd ~rs1)));
+  QCheck.( mk_test ~name:"@fsrmi" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (rd, zimm) -> f `_fsrmi (Asm._fsrmi ~rd ~zimm)));
+  QCheck.( mk_test ~name:"@fscsr" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (rd, rs1) -> f `_fscsr (Asm._fscsr ~rd ~rs1)));
+  QCheck.( mk_test ~name:"@frcsr" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_frcsr (Asm._frcsr ~rd)));
+  QCheck.( mk_test ~name:"@rdcycle" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_rdcycle (Asm._rdcycle ~rd)));
+  QCheck.( mk_test ~name:"@rdtime" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_rdtime (Asm._rdtime ~rd)));
+  QCheck.( mk_test ~name:"@rdinstret" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_rdinstret (Asm._rdinstret ~rd)));
+  QCheck.( mk_test ~name:"@rdcycleh" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_rdcycleh (Asm._rdcycleh ~rd)));
+  QCheck.( mk_test ~name:"@rdtimeh" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_rdtimeh (Asm._rdtimeh ~rd)));
+  QCheck.( mk_test ~name:"@rdinstreth" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 32)) 
+    (fun (rd) -> f `_rdinstreth (Asm._rdinstreth ~rd)));
+]
 
 end
 

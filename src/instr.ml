@@ -7,6 +7,114 @@ exception RISCV_instruction_not_yet_implemented
 exception RISCV_system_call
 exception RISCV_breakpoint
 
+module Util = struct
+
+  type 'a t = ('a * (Int32.t * Int32.t)) list
+
+  (* given an instruction set, compute the set of bits which are always 0 or always 1 *)
+  let constant_10 i = 
+    let all1, all0 = 
+      List.fold_left 
+        (fun (all1, all0) (_,(_,m)) -> I.(all1 &: m, all0 |: m)) (-1l,0l) i
+    in
+    all1, I.(~: all0)
+
+  let constant_mask i = List.fold_left (fun all (_,(m,_)) -> I.(all |: m)) 0l i
+
+  let constant_all instrs = 
+    let all1,all0 = constant_10 instrs in
+    I.( ~: (all1 |: all0) ) 
+
+  (* given a mask of non-constant bits (ie ~: (all1 |: all0)) it returns
+   * the set of bit ranges which need to be decoded *)
+  let ranges all = 
+    let rec f prev_pos pos = 
+      if pos = 32 then
+        match prev_pos with
+        | None -> []
+        | Some(prev_pos) -> [(prev_pos,32-1)]
+      else
+        if I.(all &: (1l <<: pos)) = 0l then 
+          match prev_pos with
+          | None -> f prev_pos (pos+1)
+          | Some(prev_pos) -> (prev_pos,pos-1) :: f None (pos+1)
+        else 
+          match prev_pos with
+          | None -> f (Some(pos)) (pos+1)
+          | Some(_) -> f prev_pos (pos+1)
+    in
+    f None 0
+
+  module M = Map.Make(Int32)
+
+  let partition instrs (l,h) = 
+    let map = List.fold_left
+      (fun map ((_,(m',m)) as y) ->
+        let msk = I.( (1l <<: (h-l+1)) -: 1l ) in
+        let m = I.( (m >>: l) &: msk ) in
+        let m' = I.( (m' >>: l) &: msk ) in
+        let rec enum i map =
+          let add map = 
+            try 
+              let els = M.find i map in
+              M.add i (y :: els) map
+            with _ ->
+              M.add i [y] map
+          in
+          if i > msk then map
+          else if I.(i &: m') = I.(m &: m') then begin
+            enum I.(i +: 1l) (add map)
+          end else 
+            enum I.(i +: 1l) map
+        in
+        enum 0l map 
+
+      ) M.empty instrs
+    in
+    M.bindings map 
+
+  (* partition instructions *)
+  let instruction_decoder instrs = 
+    let rec f done_mask instrs = 
+      match instrs with
+      | [] -> (fun _ -> raise Not_found) (* illegal instruction *)
+      | [(x,_)] -> (fun _ -> x) (* result *)
+      | _ -> begin
+        (* (re-)compute ranges on this branch *)
+        let ranges = ranges I.((~: done_mask) &: (constant_all instrs &: constant_mask instrs)) in
+
+        match ranges with
+        | (l,h) :: _ -> 
+          let msk = I.( (1l <<: (h-l+1)) -: 1l ) in
+          (* create an array indexed by instr.[h..l] *)
+          let partition = partition instrs (l,h) in
+          let a = Array.init (1 lsl (h-l+1))
+            (fun i -> 
+              let instrs = try List.assoc Int32.(of_int i) partition with _ -> [] in
+              f I.(done_mask |: (msk <<: l)) instrs)
+          in
+          (* look up instruction in array *)
+          (fun (i:I.t) -> 
+            let m = I.( (i >>: l) &: msk ) in
+            a.(I.to_int m) i)
+
+        | _ -> begin
+          List.iter (fun (_,(_,m)) -> Printf.printf "%.8lx\n%!" m) instrs;
+          raise Not_found (* should not happen *)
+        end
+      end
+    in
+    f 0l instrs 
+
+  let instruction_decoder_simple instrs i = 
+    let rec f = function
+      | [] -> raise Not_found
+      | (op,(m,m'))::t -> if Int32.logand m i = m' then op else f t
+    in
+    f instrs
+
+end
+
 module Make(T : T) = struct
 
   open T

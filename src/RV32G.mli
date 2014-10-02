@@ -14,6 +14,8 @@ module T : sig
 
   val pretty : Int32.t -> string
   
+  val fields : (t * Types.Fields.t list) list
+
 end
 
 module Asm : sig
@@ -24,3 +26,6 @@ module Asm : sig
   include module type of RV32D.Asm
 end
 
+module Test : sig
+  val suite : (T.t -> Types.I.t -> bool) -> int -> QCheck.suite
+end

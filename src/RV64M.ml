@@ -39,6 +39,16 @@ let pretty i =
     ("remw" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " rs2=" ^ (x 24 20))
   | `remuw    ->
     ("remuw" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " rs2=" ^ (x 24 20))
+let fields =
+  let open Types.Fields in
+  [
+    (`mulw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(1)); Range((14,12),Int(0)); Range((6,2),Int(14)); Range((1,0),Int(3)); ]);
+    (`divw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(1)); Range((14,12),Int(4)); Range((6,2),Int(14)); Range((1,0),Int(3)); ]);
+    (`divuw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(1)); Range((14,12),Int(5)); Range((6,2),Int(14)); Range((1,0),Int(3)); ]);
+    (`remw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(1)); Range((14,12),Int(6)); Range((6,2),Int(14)); Range((1,0),Int(3)); ]);
+    (`remuw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(1)); Range((14,12),Int(7)); Range((6,2),Int(14)); Range((1,0),Int(3)); ]);
+  ]
+
 end
 
 module Asm = struct
@@ -72,6 +82,33 @@ let remuw ~rd ~rs1 ~rs2 = Types.I.(
   (((of_int rs1) &: 0x1fl) <<: 15) |:
   (((of_int rs2) &: 0x1fl) <<: 20) |:
   0x200703bl)
+
+end
+
+module Test = struct
+
+let suite f n = [
+  QCheck.( mk_test ~name:"mulw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `mulw (Asm.mulw ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"divw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `divw (Asm.divw ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"divuw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `divuw (Asm.divuw ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"remw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `remw (Asm.remw ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"remuw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `remuw (Asm.remuw ~rd ~rs1 ~rs2)));
+]
 
 end
 

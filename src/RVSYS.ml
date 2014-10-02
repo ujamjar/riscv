@@ -55,6 +55,20 @@ let pretty i =
     ("csrrsi" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " imm12=" ^ (x 31 20))
   | `csrrci   ->
     ("csrrci" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " imm12=" ^ (x 31 20))
+let fields =
+  let open Types.Fields in
+  [
+    (`scall, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(0)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`sbreak, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(1)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`sret, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(2048)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`csrrw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`csrrs, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`csrrc, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`csrrwi, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`csrrsi, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`csrrci, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(7)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+  ]
+
 end
 
 module Asm = struct
@@ -103,6 +117,37 @@ let csrrci ~rd ~rs1 ~imm12 = Types.I.(
   (((of_int rs1) &: 0x1fl) <<: 15) |:
   (((of_int imm12) &: 0xfffl) <<: 20) |:
   0x7073l)
+
+end
+
+module Test = struct
+
+let suite f n = [
+  QCheck.( mk_test ~name:"csrrw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `csrrw (Asm.csrrw ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"csrrs" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `csrrs (Asm.csrrs ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"csrrc" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `csrrc (Asm.csrrc ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"csrrwi" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `csrrwi (Asm.csrrwi ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"csrrsi" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `csrrsi (Asm.csrrsi ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"csrrci" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `csrrci (Asm.csrrci ~rd ~rs1 ~imm12)));
+]
 
 end
 

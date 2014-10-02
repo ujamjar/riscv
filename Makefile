@@ -7,7 +7,7 @@ sim:
 	ocamlbuild -use-ocamlfind sim.byte
 
 tests:
-	ocamlbuild -use-ocamlfind test_mem.byte test_instr.byte 
+	ocamlbuild -use-ocamlfind test_mem.byte test_instr.byte test_decoder.native
 
 opcodes:
 	ocamlbuild -use-ocamlfind genops.byte

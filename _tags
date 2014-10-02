@@ -1,6 +1,7 @@
-<src/*.ml{,i}>: package(bigarray)
+<src/*.ml{,i}>: package(bigarray,qcheck)
 
-<test/*.byte>: package(bigarray)
+<test/*.ml{,i}>: package(qcheck)
+<test/*.{byte,native}>: package(bigarray,qcheck)
 
 <tools/*.ml>: package(re)
 <tools/*.byte>: package(re)

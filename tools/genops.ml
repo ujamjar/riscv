@@ -71,6 +71,29 @@ let write_pretty f instrs =
     fprintf f ")\n"
   ) instrs
 
+let write_fields f instrs = 
+  let value = function
+    | Opcodes.Ignore -> "Ignore"
+    | Opcodes.Nothing -> "Nothing"
+    | Opcodes.Int i -> sprintf "Int(%i)" i
+  in
+  fprintf f "let fields =\n";
+  fprintf f "  let open Types.Fields in\n";
+  fprintf f "  [\n";
+  List.iter (fun (n,p) ->
+    fprintf f "    (`%s, [ " (Opcodes.map_name n);
+    List.iter (function
+      | Opcodes.Field((_,n,(h,l)), v) ->
+        fprintf f "Field((`%s,\"%s\",(%i,%i)), %s); " n n h l (value v)
+      | Opcodes.Bit(n,v) ->
+        fprintf f "Bit(%i,%s); " n (value v)
+      | Opcodes.Range((h,l),v) ->
+        fprintf f "Range((%i,%i),%s); " h l (value v)
+    ) p;
+    fprintf f "]);\n"
+  ) instrs;
+  fprintf f "  ]\n\n"
+
 let write_module m = 
 
   let ops = open_in ("tools/" ^ m ^ ".ops") in
@@ -81,13 +104,18 @@ let write_module m =
 
   fprintf mli "module T : sig\n\n";
   write_instrs_type mli instrs;
-  fprintf mli "val mask_match : (t * (Int32.t * Int32.t)) list\n\n";
-  fprintf mli "val to_t : Int32.t -> t\n\n";
-  fprintf mli "val pretty : Int32.t -> string\n\n";
+  fprintf mli "val mask_match : (t * (Types.I.t * Types.I.t)) list\n\n";
+  fprintf mli "val to_t : Types.I.t -> t\n\n";
+  fprintf mli "val pretty : Types.I.t -> string\n\n";
+  fprintf mli "val fields : (t * Types.Fields.t list) list\n\n";
   fprintf mli "end\n\n";
 
   fprintf mli "module Asm : sig\n\n";
   Opcodes.write_asm_mli mli instrs;
+  fprintf mli "\nend\n\n";
+
+  fprintf mli "module Test : sig\n\n";
+  fprintf mli "val suite : (T.t -> Types.I.t -> bool) -> int -> QCheck.suite\n";
   fprintf mli "\nend\n\n";
 
   fprintf ml "module T = struct\n\n";
@@ -95,10 +123,15 @@ let write_module m =
   write_mask ml instrs;
   write_get_opcode ml;
   write_pretty ml instrs;
+  write_fields ml instrs;
   fprintf ml "end\n\n";
 
   fprintf ml "module Asm = struct\n\n";
   Opcodes.write_asm_ml ml instrs;
+  fprintf ml "end\n\n";
+
+  fprintf ml "module Test = struct\n\n";
+  Opcodes.write_qcheck_suite ml instrs;
   fprintf ml "end\n\n";
 
   close_in ops;

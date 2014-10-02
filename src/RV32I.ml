@@ -175,6 +175,50 @@ let pretty i =
     ("fence" ^ " pred=" ^ (x 27 24) ^ " succ=" ^ (x 23 20))
   | `fence_i  ->
     ("fence.i")
+let fields =
+  let open Types.Fields in
+  [
+    (`beq, [ Field((`bimm12hi,"bimm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`bimm12lo,"bimm12lo",(11,7)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(24)); Range((1,0),Int(3)); ]);
+    (`bne, [ Field((`bimm12hi,"bimm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`bimm12lo,"bimm12lo",(11,7)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(24)); Range((1,0),Int(3)); ]);
+    (`blt, [ Field((`bimm12hi,"bimm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`bimm12lo,"bimm12lo",(11,7)), Nothing); Range((14,12),Int(4)); Range((6,2),Int(24)); Range((1,0),Int(3)); ]);
+    (`bge, [ Field((`bimm12hi,"bimm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`bimm12lo,"bimm12lo",(11,7)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(24)); Range((1,0),Int(3)); ]);
+    (`bltu, [ Field((`bimm12hi,"bimm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`bimm12lo,"bimm12lo",(11,7)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(24)); Range((1,0),Int(3)); ]);
+    (`bgeu, [ Field((`bimm12hi,"bimm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`bimm12lo,"bimm12lo",(11,7)), Nothing); Range((14,12),Int(7)); Range((6,2),Int(24)); Range((1,0),Int(3)); ]);
+    (`jalr, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(25)); Range((1,0),Int(3)); ]);
+    (`jal, [ Field((`rd,"rd",(11,7)), Nothing); Field((`jimm20,"jimm20",(31,12)), Nothing); Range((6,2),Int(27)); Range((1,0),Int(3)); ]);
+    (`lui, [ Field((`rd,"rd",(11,7)), Nothing); Field((`imm20,"imm20",(31,12)), Nothing); Range((6,2),Int(13)); Range((1,0),Int(3)); ]);
+    (`auipc, [ Field((`rd,"rd",(11,7)), Nothing); Field((`imm20,"imm20",(31,12)), Nothing); Range((6,2),Int(5)); Range((1,0),Int(3)); ]);
+    (`addi, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`slli, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,26),Int(0)); Field((`shamt,"shamt",(25,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`slti, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`sltiu, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`xori, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(4)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`srli, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,26),Int(0)); Field((`shamt,"shamt",(25,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`srai, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,26),Int(16)); Field((`shamt,"shamt",(25,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`ori, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`andi, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(7)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`add, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(0)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`sub, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(32)); Range((14,12),Int(0)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`sll, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(1)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`slt, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`sltu, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(3)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`xor_, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(4)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`srl, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(5)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`sra, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(32)); Range((14,12),Int(5)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`or_, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(6)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`and_, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(7)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
+    (`lb, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
+    (`lh, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
+    (`lw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
+    (`lbu, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(4)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
+    (`lhu, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
+    (`sb, [ Field((`imm12hi,"imm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`imm12lo,"imm12lo",(11,7)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(8)); Range((1,0),Int(3)); ]);
+    (`sh, [ Field((`imm12hi,"imm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`imm12lo,"imm12lo",(11,7)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(8)); Range((1,0),Int(3)); ]);
+    (`sw, [ Field((`imm12hi,"imm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`imm12lo,"imm12lo",(11,7)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(8)); Range((1,0),Int(3)); ]);
+    (`fence, [ Range((31,28),Ignore); Field((`pred,"pred",(27,24)), Nothing); Field((`succ,"succ",(23,20)), Nothing); Range((19,15),Ignore); Range((14,12),Int(0)); Range((11,7),Ignore); Range((6,2),Int(3)); Range((1,0),Int(3)); ]);
+    (`fence_i, [ Range((31,28),Ignore); Range((27,20),Ignore); Range((19,15),Ignore); Range((14,12),Int(1)); Range((11,7),Ignore); Range((6,2),Int(3)); Range((1,0),Int(3)); ]);
+  ]
+
 end
 
 module Asm = struct
@@ -414,6 +458,165 @@ let fence ~pred ~succ = Types.I.(
 
 let fence_i = Types.I.(
   0x100fl)
+
+end
+
+module Test = struct
+
+let suite f n = [
+  QCheck.( mk_test ~name:"beq" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `beq (Asm.beq ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+  QCheck.( mk_test ~name:"bne" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bne (Asm.bne ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+  QCheck.( mk_test ~name:"blt" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `blt (Asm.blt ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+  QCheck.( mk_test ~name:"bge" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bge (Asm.bge ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+  QCheck.( mk_test ~name:"bltu" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bltu (Asm.bltu ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+  QCheck.( mk_test ~name:"bgeu" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bgeu (Asm.bgeu ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+  QCheck.( mk_test ~name:"jalr" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `jalr (Asm.jalr ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"jal" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 1048576)) 
+    (fun (rd, jimm20) -> f `jal (Asm.jal ~rd ~jimm20)));
+  QCheck.( mk_test ~name:"lui" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 1048576)) 
+    (fun (rd, imm20) -> f `lui (Asm.lui ~rd ~imm20)));
+  QCheck.( mk_test ~name:"auipc" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 1048576)) 
+    (fun (rd, imm20) -> f `auipc (Asm.auipc ~rd ~imm20)));
+  QCheck.( mk_test ~name:"addi" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `addi (Asm.addi ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"slli" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 64)) 
+    (fun (rd, rs1, shamt) -> f `slli (Asm.slli ~rd ~rs1 ~shamt)));
+  QCheck.( mk_test ~name:"slti" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `slti (Asm.slti ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"sltiu" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `sltiu (Asm.sltiu ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"xori" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `xori (Asm.xori ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"srli" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 64)) 
+    (fun (rd, rs1, shamt) -> f `srli (Asm.srli ~rd ~rs1 ~shamt)));
+  QCheck.( mk_test ~name:"srai" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 64)) 
+    (fun (rd, rs1, shamt) -> f `srai (Asm.srai ~rd ~rs1 ~shamt)));
+  QCheck.( mk_test ~name:"ori" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `ori (Asm.ori ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"andi" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `andi (Asm.andi ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"add" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `add (Asm.add ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"sub" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `sub (Asm.sub ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"sll" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `sll (Asm.sll ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"slt" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `slt (Asm.slt ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"sltu" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `sltu (Asm.sltu ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"xor" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `xor_ (Asm.xor_ ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"srl" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `srl (Asm.srl ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"sra" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `sra (Asm.sra ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"or" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `or_ (Asm.or_ ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"and" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
+    (fun (rd, rs1, rs2) -> f `and_ (Asm.and_ ~rd ~rs1 ~rs2)));
+  QCheck.( mk_test ~name:"lb" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `lb (Asm.lb ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"lh" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `lh (Asm.lh ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"lw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `lw (Asm.lw ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"lbu" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `lbu (Asm.lbu ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"lhu" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `lhu (Asm.lhu ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"sb" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sb (Asm.sb ~imm12hi ~rs1 ~rs2 ~imm12lo)));
+  QCheck.( mk_test ~name:"sh" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sh (Asm.sh ~imm12hi ~rs1 ~rs2 ~imm12lo)));
+  QCheck.( mk_test ~name:"sw" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
+    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sw (Asm.sw ~imm12hi ~rs1 ~rs2 ~imm12lo)));
+  QCheck.( mk_test ~name:"fence" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 16) (int 16)) 
+    (fun (pred, succ) -> f `fence (Asm.fence ~pred ~succ)));
+]
 
 end
 

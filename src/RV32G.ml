@@ -37,6 +37,16 @@ module T = struct
     try RV32D.T.pretty i 
     with Not_found -> raise Not_found
 
+  let fields = 
+    List.concat 
+      [
+        (RV32I.T.fields :> ((t * Types.Fields.t list) list));
+        (RV32M.T.fields :> ((t * Types.Fields.t list) list));
+        (RV32A.T.fields :> ((t * Types.Fields.t list) list));
+        (RV32F.T.fields :> ((t * Types.Fields.t list) list));
+        (RV32D.T.fields :> ((t * Types.Fields.t list) list));
+      ]
+
 end
 
 module Asm = struct
@@ -46,4 +56,17 @@ module Asm = struct
   include RV32F.Asm
   include RV32D.Asm
 end
+
+module Test = struct
+  let suite f n = 
+    let suites = [
+      (RV32I.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
+      (RV32M.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
+      (RV32A.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
+      (RV32F.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
+      (RV32D.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
+    ] in
+    List.concat (List.map (fun suite -> suite f n) suites)
+end
+
 

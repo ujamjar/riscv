@@ -155,6 +155,45 @@ let pretty i =
     ("c.or3" ^ " crds=" ^ (x 15 13) ^ " crs1s=" ^ (x 12 10) ^ " crs2bs=" ^ (x 7 5))
   | `c_and3   ->
     ("c.and3" ^ " crds=" ^ (x 15 13) ^ " crs1s=" ^ (x 12 10) ^ " crs2bs=" ^ (x 7 5))
+let fields =
+  let open Types.Fields in
+  [
+    (`c_li, [ Field((`cimm6,"cimm6",(15,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(0)); ]);
+    (`c_addi, [ Field((`cimm6,"cimm6",(15,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(1)); ]);
+    (`c_addiw, [ Field((`cimm6,"cimm6",(15,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(29)); ]);
+    (`c_ldsp, [ Field((`cimm6,"cimm6",(15,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(4)); ]);
+    (`c_lwsp, [ Field((`cimm6,"cimm6",(15,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(5)); ]);
+    (`c_sdsp, [ Field((`cimm6,"cimm6",(15,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(6)); ]);
+    (`c_swsp, [ Field((`cimm6,"cimm6",(15,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(8)); ]);
+    (`c_lw0, [ Bit(15,Int(0)); Field((`crs1,"crs1",(14,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(18)); ]);
+    (`c_ld0, [ Bit(15,Int(1)); Field((`crs1,"crs1",(14,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(18)); ]);
+    (`c_add, [ Bit(15,Int(0)); Field((`crs1,"crs1",(14,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(26)); ]);
+    (`c_sub, [ Bit(15,Int(1)); Field((`crs1,"crs1",(14,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(26)); ]);
+    (`c_move, [ Bit(15,Int(0)); Field((`crs1,"crs1",(14,10)), Nothing); Field((`crd,"crd",(9,5)), Nothing); Range((4,0),Int(2)); ]);
+    (`c_j, [ Bit(15,Int(1)); Field((`cimm10,"cimm10",(14,5)), Nothing); Range((4,0),Int(2)); ]);
+    (`c_ld, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(9)); ]);
+    (`c_lw, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(10)); ]);
+    (`c_sd, [ Field((`crs2s,"crs2s",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(12)); ]);
+    (`c_sw, [ Field((`crs2s,"crs2s",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(13)); ]);
+    (`c_beq, [ Field((`crs2s,"crs2s",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(16)); ]);
+    (`c_bne, [ Field((`crs2s,"crs2s",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(17)); ]);
+    (`c_flw, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(20)); ]);
+    (`c_fld, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(21)); ]);
+    (`c_fsw, [ Field((`crs2s,"crs2s",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(22)); ]);
+    (`c_fsd, [ Field((`crs2s,"crs2s",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(24)); ]);
+    (`c_slli, [ Field((`crds,"crds",(15,13)), Nothing); Range((12,10),Int(0)); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(25)); ]);
+    (`c_slli32, [ Field((`crds,"crds",(15,13)), Nothing); Range((12,10),Int(1)); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(25)); ]);
+    (`c_srli, [ Field((`crds,"crds",(15,13)), Nothing); Range((12,10),Int(2)); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(25)); ]);
+    (`c_srli32, [ Field((`crds,"crds",(15,13)), Nothing); Range((12,10),Int(3)); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(25)); ]);
+    (`c_srai, [ Field((`crds,"crds",(15,13)), Nothing); Range((12,10),Int(4)); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(25)); ]);
+    (`c_srai32, [ Field((`crds,"crds",(15,13)), Nothing); Range((12,10),Int(5)); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(25)); ]);
+    (`c_slliw, [ Field((`crds,"crds",(15,13)), Nothing); Range((12,10),Int(6)); Field((`cimm5,"cimm5",(9,5)), Nothing); Range((4,0),Int(25)); ]);
+    (`c_add3, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Range((9,8),Int(0)); Field((`crs2bs,"crs2bs",(7,5)), Nothing); Range((4,0),Int(28)); ]);
+    (`c_sub3, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Range((9,8),Int(1)); Field((`crs2bs,"crs2bs",(7,5)), Nothing); Range((4,0),Int(28)); ]);
+    (`c_or3, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Range((9,8),Int(2)); Field((`crs2bs,"crs2bs",(7,5)), Nothing); Range((4,0),Int(28)); ]);
+    (`c_and3, [ Field((`crds,"crds",(15,13)), Nothing); Field((`crs1s,"crs1s",(12,10)), Nothing); Range((9,8),Int(3)); Field((`crs2bs,"crs2bs",(7,5)), Nothing); Range((4,0),Int(28)); ]);
+  ]
+
 end
 
 module Asm = struct
@@ -341,6 +380,149 @@ let c_and3 ~crds ~crs1s ~crs2bs = Types.I.(
   (((of_int crs1s) &: 0x7l) <<: 10) |:
   (((of_int crs2bs) &: 0x7l) <<: 5) |:
   0x31cl)
+
+end
+
+module Test = struct
+
+let suite f n = [
+  QCheck.( mk_test ~name:"c.li" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
+    (fun (cimm6, crd) -> f `c_li (Asm.c_li ~cimm6 ~crd)));
+  QCheck.( mk_test ~name:"c.addi" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
+    (fun (cimm6, crd) -> f `c_addi (Asm.c_addi ~cimm6 ~crd)));
+  QCheck.( mk_test ~name:"c.addiw" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
+    (fun (cimm6, crd) -> f `c_addiw (Asm.c_addiw ~cimm6 ~crd)));
+  QCheck.( mk_test ~name:"c.ldsp" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
+    (fun (cimm6, crd) -> f `c_ldsp (Asm.c_ldsp ~cimm6 ~crd)));
+  QCheck.( mk_test ~name:"c.lwsp" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
+    (fun (cimm6, crd) -> f `c_lwsp (Asm.c_lwsp ~cimm6 ~crd)));
+  QCheck.( mk_test ~name:"c.sdsp" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
+    (fun (cimm6, crd) -> f `c_sdsp (Asm.c_sdsp ~cimm6 ~crd)));
+  QCheck.( mk_test ~name:"c.swsp" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
+    (fun (cimm6, crd) -> f `c_swsp (Asm.c_swsp ~cimm6 ~crd)));
+  QCheck.( mk_test ~name:"c.lw0" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (crs1, crd) -> f `c_lw0 (Asm.c_lw0 ~crs1 ~crd)));
+  QCheck.( mk_test ~name:"c.ld0" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (crs1, crd) -> f `c_ld0 (Asm.c_ld0 ~crs1 ~crd)));
+  QCheck.( mk_test ~name:"c.add" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (crs1, crd) -> f `c_add (Asm.c_add ~crs1 ~crd)));
+  QCheck.( mk_test ~name:"c.sub" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (crs1, crd) -> f `c_sub (Asm.c_sub ~crs1 ~crd)));
+  QCheck.( mk_test ~name:"c.move" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
+    (fun (crs1, crd) -> f `c_move (Asm.c_move ~crs1 ~crd)));
+  QCheck.( mk_test ~name:"c.j" ~n 
+    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
+    Arbitrary.(QCRV.tuple1 (int 1024)) 
+    (fun (cimm10) -> f `c_j (Asm.c_j ~cimm10)));
+  QCheck.( mk_test ~name:"c.ld" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crds, crs1s, cimm5) -> f `c_ld (Asm.c_ld ~crds ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.lw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crds, crs1s, cimm5) -> f `c_lw (Asm.c_lw ~crds ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.sd" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crs2s, crs1s, cimm5) -> f `c_sd (Asm.c_sd ~crs2s ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.sw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crs2s, crs1s, cimm5) -> f `c_sw (Asm.c_sw ~crs2s ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.beq" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crs2s, crs1s, cimm5) -> f `c_beq (Asm.c_beq ~crs2s ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.bne" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crs2s, crs1s, cimm5) -> f `c_bne (Asm.c_bne ~crs2s ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.flw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crds, crs1s, cimm5) -> f `c_flw (Asm.c_flw ~crds ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.fld" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crds, crs1s, cimm5) -> f `c_fld (Asm.c_fld ~crds ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.fsw" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crs2s, crs1s, cimm5) -> f `c_fsw (Asm.c_fsw ~crs2s ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.fsd" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
+    (fun (crs2s, crs1s, cimm5) -> f `c_fsd (Asm.c_fsd ~crs2s ~crs1s ~cimm5)));
+  QCheck.( mk_test ~name:"c.slli" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
+    (fun (crds, cimm5) -> f `c_slli (Asm.c_slli ~crds ~cimm5)));
+  QCheck.( mk_test ~name:"c.slli32" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
+    (fun (crds, cimm5) -> f `c_slli32 (Asm.c_slli32 ~crds ~cimm5)));
+  QCheck.( mk_test ~name:"c.srli" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
+    (fun (crds, cimm5) -> f `c_srli (Asm.c_srli ~crds ~cimm5)));
+  QCheck.( mk_test ~name:"c.srli32" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
+    (fun (crds, cimm5) -> f `c_srli32 (Asm.c_srli32 ~crds ~cimm5)));
+  QCheck.( mk_test ~name:"c.srai" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
+    (fun (crds, cimm5) -> f `c_srai (Asm.c_srai ~crds ~cimm5)));
+  QCheck.( mk_test ~name:"c.srai32" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
+    (fun (crds, cimm5) -> f `c_srai32 (Asm.c_srai32 ~crds ~cimm5)));
+  QCheck.( mk_test ~name:"c.slliw" ~n 
+    ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
+    Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
+    (fun (crds, cimm5) -> f `c_slliw (Asm.c_slliw ~crds ~cimm5)));
+  QCheck.( mk_test ~name:"c.add3" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
+    (fun (crds, crs1s, crs2bs) -> f `c_add3 (Asm.c_add3 ~crds ~crs1s ~crs2bs)));
+  QCheck.( mk_test ~name:"c.sub3" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
+    (fun (crds, crs1s, crs2bs) -> f `c_sub3 (Asm.c_sub3 ~crds ~crs1s ~crs2bs)));
+  QCheck.( mk_test ~name:"c.or3" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
+    (fun (crds, crs1s, crs2bs) -> f `c_or3 (Asm.c_or3 ~crds ~crs1s ~crs2bs)));
+  QCheck.( mk_test ~name:"c.and3" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
+    (fun (crds, crs1s, crs2bs) -> f `c_and3 (Asm.c_and3 ~crds ~crs1s ~crs2bs)));
+]
 
 end
 

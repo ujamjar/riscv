@@ -63,6 +63,22 @@ let pretty i =
     ("lr.w" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " aqrl=" ^ (x 26 25))
   | `sc_w     ->
     ("sc.w" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " rs2=" ^ (x 24 20) ^ " aqrl=" ^ (x 26 25))
+let fields =
+  let open Types.Fields in
+  [
+    (`amoadd_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(0)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amoxor_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(1)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amoor_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(2)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amoand_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(3)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amomin_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(4)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amomax_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(5)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amominu_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(6)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amomaxu_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(7)); Range((28,27),Int(0)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`amoswap_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(0)); Range((28,27),Int(1)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`lr_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((24,20),Int(0)); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(0)); Range((28,27),Int(2)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+    (`sc_w, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`aqrl,"aqrl",(26,25)), Nothing); Range((31,29),Int(0)); Range((28,27),Int(3)); Range((14,12),Int(2)); Range((6,2),Int(11)); Range((1,0),Int(3)); ]);
+  ]
+
 end
 
 module Asm = struct
@@ -142,6 +158,57 @@ let sc_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
   (((of_int rs2) &: 0x1fl) <<: 20) |:
   (((of_int aqrl) &: 0x3l) <<: 25) |:
   0x1800202fl)
+
+end
+
+module Test = struct
+
+let suite f n = [
+  QCheck.( mk_test ~name:"amoadd.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amoadd_w (Asm.amoadd_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amoxor.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amoxor_w (Asm.amoxor_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amoor.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amoor_w (Asm.amoor_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amoand.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amoand_w (Asm.amoand_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amomin.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amomin_w (Asm.amomin_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amomax.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amomax_w (Asm.amomax_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amominu.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amominu_w (Asm.amominu_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amomaxu.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amomaxu_w (Asm.amomaxu_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"amoswap.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `amoswap_w (Asm.amoswap_w ~rd ~rs1 ~rs2 ~aqrl)));
+  QCheck.( mk_test ~name:"lr.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, aqrl) -> f `lr_w (Asm.lr_w ~rd ~rs1 ~aqrl)));
+  QCheck.( mk_test ~name:"sc.w" ~n 
+    ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
+    Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
+    (fun (rd, rs1, rs2, aqrl) -> f `sc_w (Asm.sc_w ~rd ~rs1 ~rs2 ~aqrl)));
+]
 
 end
 

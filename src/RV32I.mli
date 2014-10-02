@@ -42,11 +42,13 @@ type t = [
 | `fence_i
 ]
 
-val mask_match : (t * (Int32.t * Int32.t)) list
+val mask_match : (t * (Types.I.t * Types.I.t)) list
 
-val to_t : Int32.t -> t
+val to_t : Types.I.t -> t
 
-val pretty : Int32.t -> string
+val pretty : Types.I.t -> string
+
+val fields : (t * Types.Fields.t list) list
 
 end
 
@@ -91,6 +93,12 @@ val sh : imm12hi:int -> rs1:int -> rs2:int -> imm12lo:int -> Types.I.t
 val sw : imm12hi:int -> rs1:int -> rs2:int -> imm12lo:int -> Types.I.t
 val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
+
+end
+
+module Test : sig
+
+val suite : (T.t -> Types.I.t -> bool) -> int -> QCheck.suite
 
 end
 

@@ -9,11 +9,13 @@ type t = [
 | `fmv_d_x
 ]
 
-val mask_match : (t * (Int32.t * Int32.t)) list
+val mask_match : (t * (Types.I.t * Types.I.t)) list
 
-val to_t : Int32.t -> t
+val to_t : Types.I.t -> t
 
-val pretty : Int32.t -> string
+val pretty : Types.I.t -> string
+
+val fields : (t * Types.Fields.t list) list
 
 end
 
@@ -25,6 +27,12 @@ val fmv_x_d : rd:int -> rs1:int -> Types.I.t
 val fcvt_d_l : rd:int -> rs1:int -> rm:int -> Types.I.t
 val fcvt_d_lu : rd:int -> rs1:int -> rm:int -> Types.I.t
 val fmv_d_x : rd:int -> rs1:int -> Types.I.t
+
+end
+
+module Test : sig
+
+val suite : (T.t -> Types.I.t -> bool) -> int -> QCheck.suite
 
 end
 

@@ -328,6 +328,80 @@ module Make(D : D) = struct
 
 end
 
+module Fields = struct
+  type field = [
+    | `rd      
+    | `rs1     
+    | `rs2     
+    | `rs3     
+    | `aqrl    
+    | `pred    
+    | `succ    
+    | `rm      
+    | `imm20   
+    | `jimm20  
+    | `imm12   
+    | `imm12hi 
+    | `bimm12hi
+    | `imm12lo 
+    | `bimm12lo
+    | `zimm    
+    | `shamt   
+    | `shamtw  
+    | `vseglen 
+    | `crd     
+    | `crs2    
+    | `crs1    
+    | `crds    
+    | `crs2s   
+    | `crs2bs  
+    | `crs1s   
+    | `cimm6   
+    | `cimm10  
+    | `cimm5   
+  ]
+  let fields : (field * string * (int * int)) list = [
+    (* 32 bit instructions *)
+    `rd      , "rd"      , (11, 7);
+    `rs1     , "rs1"     , (19,15);
+    `rs2     , "rs2"     , (24,20);
+    `rs3     , "rs3"     , (31,27);
+    `aqrl    , "aqrl"    , (26,25);
+    `pred    , "pred"    , (27,24);
+    `succ    , "succ"    , (23,20);
+    `rm      , "rm"      , (14,12);
+    `imm20   , "imm20"   , (31,12);
+    `jimm20  , "jimm20"  , (31,12);
+    `imm12   , "imm12"   , (31,20);
+    `imm12hi , "imm12hi" , (31,25);
+    `bimm12hi, "bimm12hi", (31,25);
+    `imm12lo , "imm12lo" , (11, 7);
+    `bimm12lo, "bimm12lo", (11, 7);
+    `zimm    , "zimm"    , (19,15);
+    `shamt   , "shamt"   , (25,20);
+    `shamtw  , "shamtw"  , (24,20);
+    `vseglen , "vseglen" , (31,29);
+    (* 16 bit compressed instructions *)
+    `crd     , "crd"     , ( 9, 5);
+    `crs2    , "crs2"    , ( 9, 5);
+    `crs1    , "crs1"    , (14,10);
+    `crds    , "crds"    , (15,13);
+    `crs2s   , "crs2s"   , (15,13);
+    `crs2bs  , "crs2bs"  , ( 7, 5);
+    `crs1s   , "crs1s"   , (12,10);
+    `cimm6   , "cimm6"   , (15,10);
+    `cimm10  , "cimm10"  , (14, 5);
+    `cimm5   , "cimm5"   , ( 9, 5);
+  ]
+  type value =
+    | Int of int
+    | Ignore
+    | Nothing
+  type t = 
+    | Field of (field * string * (int * int)) * value
+    | Bit of int * value
+    | Range of (int * int) * value
+end
 
 module D64 = struct
   include I64

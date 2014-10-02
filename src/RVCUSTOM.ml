@@ -115,6 +115,35 @@ let pretty i =
     ("@custom3.rd.rs1" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " imm12=" ^ (x 31 20))
   | `_custom3_rd_rs1_rs2 ->
     ("@custom3.rd.rs1.rs2" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " imm12=" ^ (x 31 20))
+let fields =
+  let open Types.Fields in
+  [
+    (`_custom0, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(2)); Range((1,0),Int(3)); ]);
+    (`_custom0_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(2)); Range((1,0),Int(3)); ]);
+    (`_custom0_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(2)); Range((1,0),Int(3)); ]);
+    (`_custom0_rd, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(4)); Range((6,2),Int(2)); Range((1,0),Int(3)); ]);
+    (`_custom0_rd_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(2)); Range((1,0),Int(3)); ]);
+    (`_custom0_rd_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(7)); Range((6,2),Int(2)); Range((1,0),Int(3)); ]);
+    (`_custom1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(10)); Range((1,0),Int(3)); ]);
+    (`_custom1_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(10)); Range((1,0),Int(3)); ]);
+    (`_custom1_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(10)); Range((1,0),Int(3)); ]);
+    (`_custom1_rd, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(4)); Range((6,2),Int(10)); Range((1,0),Int(3)); ]);
+    (`_custom1_rd_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(10)); Range((1,0),Int(3)); ]);
+    (`_custom1_rd_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(7)); Range((6,2),Int(10)); Range((1,0),Int(3)); ]);
+    (`_custom2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(22)); Range((1,0),Int(3)); ]);
+    (`_custom2_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(22)); Range((1,0),Int(3)); ]);
+    (`_custom2_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(22)); Range((1,0),Int(3)); ]);
+    (`_custom2_rd, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(4)); Range((6,2),Int(22)); Range((1,0),Int(3)); ]);
+    (`_custom2_rd_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(22)); Range((1,0),Int(3)); ]);
+    (`_custom2_rd_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(7)); Range((6,2),Int(22)); Range((1,0),Int(3)); ]);
+    (`_custom3, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(30)); Range((1,0),Int(3)); ]);
+    (`_custom3_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(30)); Range((1,0),Int(3)); ]);
+    (`_custom3_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(30)); Range((1,0),Int(3)); ]);
+    (`_custom3_rd, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(4)); Range((6,2),Int(30)); Range((1,0),Int(3)); ]);
+    (`_custom3_rd_rs1, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(30)); Range((1,0),Int(3)); ]);
+    (`_custom3_rd_rs1_rs2, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(7)); Range((6,2),Int(30)); Range((1,0),Int(3)); ]);
+  ]
+
 end
 
 module Asm = struct
@@ -262,6 +291,109 @@ let _custom3_rd_rs1_rs2 ~rd ~rs1 ~imm12 = Types.I.(
   (((of_int rs1) &: 0x1fl) <<: 15) |:
   (((of_int imm12) &: 0xfffl) <<: 20) |:
   0x707bl)
+
+end
+
+module Test = struct
+
+let suite f n = [
+  QCheck.( mk_test ~name:"@custom0" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom0 (Asm._custom0 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom0.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom0_rs1 (Asm._custom0_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom0.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom0_rs1_rs2 (Asm._custom0_rs1_rs2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom0.rd" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom0_rd (Asm._custom0_rd ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom0.rd.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom0_rd_rs1 (Asm._custom0_rd_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom0.rd.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom0_rd_rs1_rs2 (Asm._custom0_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom1 (Asm._custom1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom1.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom1_rs1 (Asm._custom1_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom1.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom1_rs1_rs2 (Asm._custom1_rs1_rs2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom1.rd" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom1_rd (Asm._custom1_rd ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom1.rd.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom1_rd_rs1 (Asm._custom1_rd_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom1.rd.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom1_rd_rs1_rs2 (Asm._custom1_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom2 (Asm._custom2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom2.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom2_rs1 (Asm._custom2_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom2.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom2_rs1_rs2 (Asm._custom2_rs1_rs2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom2.rd" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom2_rd (Asm._custom2_rd ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom2.rd.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom2_rd_rs1 (Asm._custom2_rd_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom2.rd.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom2_rd_rs1_rs2 (Asm._custom2_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom3" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom3 (Asm._custom3 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom3.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom3_rs1 (Asm._custom3_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom3.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom3_rs1_rs2 (Asm._custom3_rs1_rs2 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom3.rd" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom3_rd (Asm._custom3_rd ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom3.rd.rs1" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom3_rd_rs1 (Asm._custom3_rd_rs1 ~rd ~rs1 ~imm12)));
+  QCheck.( mk_test ~name:"@custom3.rd.rs1.rs2" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `_custom3_rd_rs1_rs2 (Asm._custom3_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+]
 
 end
 
