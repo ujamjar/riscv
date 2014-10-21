@@ -18,7 +18,7 @@ module Util : sig
   val instruction_decoder_simple : 'a t -> (I.t -> 'a)
 end
 
-module Make(T : Types.T) : sig
+module Make_old(T : Types.T) : sig
 
   val i_type : T.riscv -> T.instr -> unit
   val r_type : T.riscv -> T.instr -> unit
@@ -39,3 +39,46 @@ module Make(T : Types.T) : sig
   val execute : T.riscv -> T.instr -> unit
 
 end
+
+module Make(T : Types.T) : sig
+  module RV32I : sig
+    val exec : T.riscv -> Types.I.t -> [> RV32I.T.t ] -> unit
+  end
+  module RV32M : sig
+    val exec : T.riscv -> Types.I.t -> [> RV32M.T.t ] -> unit
+  end
+  module RV32A : sig
+    val exec : T.riscv -> Types.I.t -> [> RV32A.T.t ] -> unit
+  end
+  module RV32F : sig
+    val exec : T.riscv -> Types.I.t -> [> RV32F.T.t ] -> unit
+  end
+  module RV32D : sig
+    val exec : T.riscv -> Types.I.t -> [> RV32D.T.t ] -> unit
+  end
+  module RVSYS : sig
+    val exec : T.riscv -> Types.I.t -> [> RVSYS.T.t ] -> unit
+  end
+  module RV32G : sig
+    val exec : T.riscv -> Types.I.t -> [> RV32G.T.t ] -> unit
+  end
+  module RV64I : sig
+    val exec : T.riscv -> Types.I.t -> [> RV64I.T.t ] -> unit
+  end
+  module RV64M : sig
+    val exec : T.riscv -> Types.I.t -> [> RV64M.T.t ] -> unit
+  end
+  module RV64A : sig
+    val exec : T.riscv -> Types.I.t -> [> RV64A.T.t ] -> unit
+  end
+  module RV64F : sig
+    val exec : T.riscv -> Types.I.t -> [> RV64F.T.t ] -> unit
+  end
+  module RV64D : sig
+    val exec : T.riscv -> Types.I.t -> [> RV64D.T.t ] -> unit
+  end
+  module RV64G : sig
+    val exec : T.riscv -> Types.I.t -> [> RV64G.T.t ] -> unit
+  end
+end
+

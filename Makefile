@@ -1,13 +1,13 @@
-all: lib sim
+all: lib sim tests
 
 lib:
-	ocamlbuild -use-ocamlfind riscv.cma
+	ocamlbuild -use-ocamlfind riscv.cma riscv.cmxa
 
 sim:
 	ocamlbuild -use-ocamlfind sim.byte
 
 tests:
-	ocamlbuild -use-ocamlfind test_mem.byte test_instr.byte test_decoder.native
+	ocamlbuild -use-ocamlfind test_mem.byte test_instr.byte test_decoder.native test_elf.byte
 
 opcodes:
 	ocamlbuild -use-ocamlfind genops.byte
@@ -16,4 +16,5 @@ opcodes:
 clean:
 	ocamlbuild -clean
 	-find . -name "*~" | xargs rm -f
-
+	-rm -f *.byte
+	-rm -f *.native

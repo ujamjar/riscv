@@ -1,6 +1,4 @@
 Types
-Mem
-Instr
 QCRV
 RV32I
 RV64I
@@ -18,4 +16,7 @@ RVPSEUDO
 RVCUSTOM
 RV32G
 RV64G
+Mem
+Instr
+Load_elf
 

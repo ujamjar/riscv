@@ -137,3 +137,8 @@ end
 
 module Make(D : D) : T with type D.t = D.t
 
+val abi_name_of_reg : int -> string
+val abi_name_of_freg : int -> string
+
+
+

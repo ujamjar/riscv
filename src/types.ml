@@ -287,7 +287,7 @@ module Make(D : D) = struct
   end
 
   let riscv_init memsize_mb = 
-    let words = memsize_mb * 1024 / D.bytes in
+    let words = memsize_mb * 1024 * 1024 / D.bytes in
     let mem = D.A.create words D.zero in
     let priv = 
       {
@@ -412,4 +412,24 @@ module D32 = struct
   include I32
   let of_i x = x
 end
+
+let abi_name_of_reg r = 
+  if r = 0 then "zero"
+  else if r = 1 then "ra"
+  else if r = 2 then "fp"
+  else if r >= 3 && r <= 13 then "s" ^ string_of_int (r-2)
+  else if r = 14 then "sp"
+  else if r = 15 then "tp"
+  else if r >= 16 && r <= 17 then "v" ^ string_of_int (r-16)
+  else if r >= 18 && r <= 25 then "a" ^ string_of_int (r-18)
+  else if r >= 26 && r <= 30 then "t" ^ string_of_int (r-26)
+  else if r = 31 then "gp"
+  else raise Not_found
+
+let abi_name_of_freg r = 
+  if r >= 0 && r <= 15 then "fs" ^ string_of_int r
+  else if r >= 16 && r <= 17 then "rv" ^ string_of_int (r-16)
+  else if r >= 18 && r <= 25 then "ra" ^ string_of_int (r-18)
+  else if r >= 26 && r <= 31 then "rt" ^ string_of_int (r-26)
+  else raise Not_found
 

@@ -1,6 +1,6 @@
 
 module T = Types.Make(Types.D64)
-module R = Instr.Make(T)
+module R = Instr.Make_old(T)
 
 let riscv = T.riscv_init 1
 
