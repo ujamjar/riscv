@@ -18,6 +18,7 @@ module Util : sig
   val instruction_decoder_simple : 'a t -> (I.t -> 'a)
 end
 
+(* TO BE DELETED... *)
 module Make_old(T : Types.T) : sig
 
   val i_type : T.riscv -> T.instr -> unit

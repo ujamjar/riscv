@@ -115,6 +115,8 @@ module Util = struct
 
 end
 
+(* TO BE DELETED.  Still a couple of bits related to the supervisor mode
+ * which are in here ... and may not be correct *)
 module Make_old(T : T) = struct
 
   open T
