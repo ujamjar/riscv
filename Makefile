@@ -1,10 +1,7 @@
-all: lib sim tests
+all: lib tests
 
 lib:
 	ocamlbuild -use-ocamlfind riscv.cma riscv.cmxa
-
-sim:
-	ocamlbuild -use-ocamlfind sim.byte
 
 tests:
 	ocamlbuild -use-ocamlfind test_mem.byte test_instr.byte test_decoder.native test_elf.byte

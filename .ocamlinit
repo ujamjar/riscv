@@ -1,10 +1,4 @@
-#require "qcheck";;
+#require "qcheck,elf";;
 #directory "_build/src";;
 #load "riscv.cma";;
 
-module V = RV32G
-let insn = V.T.mask_match
-
-open Instr.Util
-
-let part a b = partition b a

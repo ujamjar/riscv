@@ -10,10 +10,10 @@ module Make(T : Types.T) : sig
 
   val insert_bits : memory -> addr -> cpu_data -> int -> int -> unit
 
-  (** store n memory addr data.  n=1,2,3,4 => 8,16,32,64 *)
+  (** store n memory addr data.  n=0,1,2,3 => 8,16,32,64 *)
   val store : int -> memory -> addr -> cpu_data -> unit
 
-  (** load  n memory addr.  n=1,2,3,4 => 8,16,32,64 *)
+  (** load  n memory addr.  n=0,1,2,3 => 8,16,32,64 *)
   val load : int -> memory -> addr -> cpu_data 
 
 end

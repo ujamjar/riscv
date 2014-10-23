@@ -119,7 +119,7 @@ module Make(T : Types.T) = struct
       (* load all segments *)
       List.iter (fun ph ->
         let fsize = String.length ph.p_data in
-        Printf.printf "segment: %i(%Li) -> %Li\n" fsize ph.p_memsz ph.p_paddr;
+        (*Printf.printf "segment: %i(%Li) -> %Li\n" fsize ph.p_memsz ph.p_paddr;*)
         (* load data *)
         for i=0 to fsize - 1 do
           M.store 0 mem (i + Int64.to_int ph.p_paddr) 
