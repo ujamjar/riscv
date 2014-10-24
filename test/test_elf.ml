@@ -1,5 +1,5 @@
 
-module T = Types.Make(Types.D64)
+module T = Cpu.Make(Types.D64)
 module Elf = Load_elf.Make(T)
 module Mem = Mem.Make(T)
 

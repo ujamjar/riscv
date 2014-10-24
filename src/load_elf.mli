@@ -1,4 +1,4 @@
-module Make(T : Types.T) : sig
+module Make(T : Cpu.T) : sig
 
   module String_map : Map.S with type key = string
 

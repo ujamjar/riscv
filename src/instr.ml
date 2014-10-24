@@ -1,5 +1,6 @@
 (* instruction decode and execute *)
 open Types
+open Cpu
 
 exception RISCV_illegal_instruction
 exception RISCV_floating_point_disabled
@@ -554,7 +555,7 @@ module Make_old(T : T) = struct
 
 end
 
-module Make(T : Types.T) = struct
+module Make(T : T) = struct
 
   open T
   module Mem = Mem.Make(T)

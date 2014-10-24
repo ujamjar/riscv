@@ -1,6 +1,6 @@
 (* use https://github.com/crabtw/ocaml-elf to load the elf into memory *)
 
-module Make(T : Types.T) = struct
+module Make(T : Cpu.T) = struct
 
   module M = Mem.Make(T)
 

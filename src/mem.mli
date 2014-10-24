@@ -4,7 +4,7 @@ exception RISCV_load_size_too_big
 exception RISCV_store_address_misaligned of int * int
 exception RISCV_load_address_misaligned of int * int
 
-module Make(T : Types.T) : sig
+module Make(T : Cpu.T) : sig
 
   open T
 

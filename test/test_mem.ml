@@ -9,7 +9,7 @@ let size_doubles = size_words/2
 (**********************************************************************)
 (* 64 bits *)
 
-module T64 = Types.Make(Types.D64)
+module T64 = Cpu.Make(Types.D64)
 module M64 = Mem.Make(T64)
 open T64
 
@@ -97,7 +97,7 @@ end
 (**********************************************************************)
 (* 32 bits *)
 
-module T32 = Types.Make(Types.D32)
+module T32 = Cpu.Make(Types.D32)
 module M32 = Mem.Make(T32)
 open T32
 

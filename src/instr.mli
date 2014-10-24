@@ -19,7 +19,7 @@ module Util : sig
 end
 
 (* TO BE DELETED... *)
-module Make_old(T : Types.T) : sig
+module Make_old(T : Cpu.T) : sig
 
   val i_type : T.riscv -> T.instr -> unit
   val r_type : T.riscv -> T.instr -> unit
@@ -41,7 +41,7 @@ module Make_old(T : Types.T) : sig
 
 end
 
-module Make(T : Types.T) : sig
+module Make(T : Cpu.T) : sig
   module RV32I : sig
     val exec : T.riscv -> Types.I.t -> [> RV32I.T.t ] -> unit
   end

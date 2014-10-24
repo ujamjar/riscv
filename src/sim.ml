@@ -1,7 +1,7 @@
 (* RV64G simulation.  To be made generic over instruction set (if possible) *)
 
 module D = Types.D64
-module T = Types.Make(D)
+module T = Cpu.Make(D)
 module R = Instr.Make(T)
 module M = Mem.Make(T)
 module E = Load_elf.Make(T)
