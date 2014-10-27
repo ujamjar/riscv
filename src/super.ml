@@ -296,6 +296,73 @@ module Make(D : Types.D) = struct
     | CSR_TIMEH     -> super.timeh    
     | CSR_INSTRETH  -> super.instreth 
 
+  let init () = 
+    {
+      fflags   = D.zero; 
+      frm      = D.zero; 
+      fcsr     = D.zero; 
+      stats    = D.zero; 
+      sup0     = D.zero; 
+      sup1     = D.zero; 
+      epc      = D.zero; 
+      badvaddr = D.zero; 
+      ptbr     = D.zero; 
+      asid     = D.zero; 
+      count    = D.zero; 
+      compare  = D.zero; 
+      evec     = D.zero; 
+      cause    = D.zero; 
+      status   = D.zero; 
+      hartid   = D.zero; 
+      impl     = D.zero; 
+      fatc     = D.zero; 
+      send_ipi = D.zero; 
+      clear_ipi= D.zero; 
+      reset    = D.zero; 
+      tohost   = D.zero; 
+      fromhost = D.zero; 
+      cycle    = D.zero; 
+      time     = D.zero; 
+      instret  = D.zero; 
+      uarch0   = D.zero; 
+      uarch1   = D.zero; 
+      uarch2   = D.zero; 
+      uarch3   = D.zero; 
+      uarch4   = D.zero; 
+      uarch5   = D.zero; 
+      uarch6   = D.zero; 
+      uarch7   = D.zero; 
+      uarch8   = D.zero; 
+      uarch9   = D.zero; 
+      uarch10  = D.zero; 
+      uarch11  = D.zero; 
+      uarch12  = D.zero; 
+      uarch13  = D.zero; 
+      uarch14  = D.zero; 
+      uarch15  = D.zero; 
+      counth   = D.zero; 
+      cycleh   = D.zero; 
+      timeh    = D.zero; 
+      instreth = D.zero; 
+    }
+
+  (* status register *)
+  module Status = struct
+    let s     = 0,1
+    let ps    = 1,1
+    let ei    = 2,1
+    let pei   = 3,1
+    let ef    = 4,1
+    let u64   = 5,1
+    let s64   = 6,1
+    let vm    = 7,1
+    let ea    = 8,1
+    let im    = 16,8
+    let ip    = 24,8
+    let set (o,b) v = D.( (v &: mask b) <<: o )
+    let get (o,b) r = D.( (r >>: o) &: mask b )
+  end
+
 end
 
 

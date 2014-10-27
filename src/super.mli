@@ -100,5 +100,23 @@ module Make(D : Types.D) : sig
   val of_addr : int -> e
   val get : t -> e -> D.t
   val set : t -> e -> D.t -> unit
+  val init : unit -> t
+  
+  module Status : sig
+    val s : int * int
+    val ps : int * int
+    val ei : int * int
+    val pei : int * int
+    val ef : int * int
+    val u64 : int * int
+    val s64 : int * int
+    val vm : int * int
+    val ea : int * int
+    val im : int * int
+    val ip : int * int
+    val set : (int * int) -> D.t -> D.t
+    val get : (int * int) -> D.t -> D.t
+  end
+
 end
 
