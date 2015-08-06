@@ -1,0 +1,8 @@
+version = "0.1"
+description = "RISC-V instruction set tools"
+requires = "bytes"
+archive(byte) = "riscv.cma"
+archive(byte, plugin) = "riscv.cma"
+archive(native) = "riscv.cmxa"
+archive(native, plugin) = "riscv.cmxs"
+exists_if = "riscv.cma"

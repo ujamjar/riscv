@@ -1,0 +1,31 @@
+OASISFormat: 0.4
+Name:        riscv
+Version:     0.1
+Synopsis:    RISCV instruction set tools
+Description: RISCV instruction set tools
+
+Authors:     Andy Ray
+Maintainers: Andy Ray <andy.ray@ujamjar.com>
+Homepage:    https://github.com/ujamjar/riscv
+License:     ISC
+Plugins:     META (0.4)
+BuildTools:  ocamlbuild
+
+Library Riscv
+  Path:          src
+  Findlibname:   riscv
+  Pack:          true
+  Modules:       Types,Instr,Mem,Super,QCRV
+                 RV32A,RV32D,RV32F,RV32G,RV32I,RV32M,RV64A,RV64D,
+                 RV64F,RV64G,RV64I,RV64M,RVC,RVCUSTOM,RVPSEUDO,RVSYS
+                 Load_elf,Cpu,Sim
+  BuildDepends:  bytes, elf
+  XMETARequires: bytes, elf
+
+SourceRepository master
+  Type:     git
+  Location: https://github.com/ujamjar/riscv.git
+  Browser:  https://github.com/ujamjar/riscv
+
+
+
