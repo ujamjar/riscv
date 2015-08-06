@@ -13,5 +13,6 @@ depends: [
   "base-bytes"
   "camlp4"
   "elf"
+  "qcheck"
 ]
 ocaml-version: [ >= "4.01.0" ]

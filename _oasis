@@ -15,12 +15,12 @@ Library Riscv
   Path:          src
   Findlibname:   riscv
   Pack:          true
-  Modules:       Types,Instr,Mem,Super,QCRV
+  Modules:       Types,Mem,Super,QCRV,
                  RV32A,RV32D,RV32F,RV32G,RV32I,RV32M,RV64A,RV64D,
-                 RV64F,RV64G,RV64I,RV64M,RVC,RVCUSTOM,RVPSEUDO,RVSYS
-                 Load_elf,Cpu,Sim
-  BuildDepends:  bytes, elf
-  XMETARequires: bytes, elf
+                 RV64F,RV64G,RV64I,RV64M,RVC,RVCUSTOM,RVPSEUDO,RVSYS,
+                 Load_elf,Cpu,Instr,Sim
+  BuildDepends:  bytes, elf, qcheck
+  XMETARequires: bytes, elf, qcheck
 
 SourceRepository master
   Type:     git

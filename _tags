@@ -1,14 +1,46 @@
-<src/*.ml{,i}>: package(bigarray,qcheck,elf)
-
-<test/*.ml{,i}>: package(qcheck)
-<test/*.{byte,native}>: package(bigarray,qcheck,elf)
-
-<tools/*.ml>: package(re)
-<tools/*.byte>: package(re)
-
-<src>: include
-<test>: include
-<tools>: include
-
-true: debug
-
+# OASIS_START
+# DO NOT EDIT (digest: 653754dddf198008f3c3e79940ff2e2e)
+# Ignore VCS directories, you can use the same kind of rule outside
+# OASIS_START/STOP if you want to exclude directories that contains
+# useless stuff for the build process
+true: annot, bin_annot
+<**/.svn>: -traverse
+<**/.svn>: not_hygienic
+".bzr": -traverse
+".bzr": not_hygienic
+".hg": -traverse
+".hg": not_hygienic
+".git": -traverse
+".git": not_hygienic
+"_darcs": -traverse
+"_darcs": not_hygienic
+# Library Riscv
+"src/Riscv.cmxs": use_Riscv
+"src/types.cmx": for-pack(Riscv)
+"src/instr.cmx": for-pack(Riscv)
+"src/mem.cmx": for-pack(Riscv)
+"src/super.cmx": for-pack(Riscv)
+"src/QCRV.cmx": for-pack(Riscv)
+"src/RV32A.cmx": for-pack(Riscv)
+"src/RV32D.cmx": for-pack(Riscv)
+"src/RV32F.cmx": for-pack(Riscv)
+"src/RV32G.cmx": for-pack(Riscv)
+"src/RV32I.cmx": for-pack(Riscv)
+"src/RV32M.cmx": for-pack(Riscv)
+"src/RV64A.cmx": for-pack(Riscv)
+"src/RV64D.cmx": for-pack(Riscv)
+"src/RV64F.cmx": for-pack(Riscv)
+"src/RV64G.cmx": for-pack(Riscv)
+"src/RV64I.cmx": for-pack(Riscv)
+"src/RV64M.cmx": for-pack(Riscv)
+"src/RVC.cmx": for-pack(Riscv)
+"src/RVCUSTOM.cmx": for-pack(Riscv)
+"src/RVPSEUDO.cmx": for-pack(Riscv)
+"src/RVSYS.cmx": for-pack(Riscv)
+"src/load_elf.cmx": for-pack(Riscv)
+"src/cpu.cmx": for-pack(Riscv)
+"src/sim.cmx": for-pack(Riscv)
+<src/*.ml{,i,y}>: pkg_bytes
+<src/*.ml{,i,y}>: pkg_elf
+<src/*.ml{,i,y}>: pkg_qcheck
+# OASIS_STOP

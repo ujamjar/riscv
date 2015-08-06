@@ -1,8 +1,12 @@
+# OASIS_START
+# DO NOT EDIT (digest: 942fcadc0674a8cee98ffec52c1c3c62)
 version = "0.1"
-description = "RISC-V instruction set tools"
-requires = "bytes"
-archive(byte) = "riscv.cma"
-archive(byte, plugin) = "riscv.cma"
-archive(native) = "riscv.cmxa"
-archive(native, plugin) = "riscv.cmxs"
-exists_if = "riscv.cma"
+description = "RISCV instruction set tools"
+requires = "bytes elf qcheck"
+archive(byte) = "Riscv.cma"
+archive(byte, plugin) = "Riscv.cma"
+archive(native) = "Riscv.cmxa"
+archive(native, plugin) = "Riscv.cmxs"
+exists_if = "Riscv.cma"
+# OASIS_STOP
+
