@@ -21,6 +21,7 @@ type field = [
   | `shamt   
   | `shamtw  
   | `vseglen 
+  | `imm
   | `crd     
   | `crs2    
   | `crs1    
@@ -54,6 +55,8 @@ let fields : (field * string * (int * int)) list = [
   `shamt   , "shamt"   , (25,20);
   `shamtw  , "shamtw"  , (24,20);
   `vseglen , "vseglen" , (31,29);
+  (* special decoded imm *)
+  `imm     , "imm"     , ( 0, 0);
   (* 16 bit compressed instructions *)
   `crd     , "crd"     , ( 9, 5);
   `crs2    , "crs2"    , ( 9, 5);
@@ -190,15 +193,18 @@ let map_name n =
   | "xor" -> "xor_"
   | _ as x -> String.map (function '.' | '@' -> '_' | _ as x -> x) x
 
-let write_asm_ml f instrs = 
+let write_asm_args f p = 
+  List.iter (function
+    | Field((_,n,(_,_)),Ignore) 
+    | Field((_,n,(_,_)),Nothing) -> Printf.fprintf f "~%s " n
+    | _ -> ()) p
+
+let write_asm_raw_ml f instrs = 
   let open Printf in
   List.iter (fun (n,p) ->
     (* function header *)
     fprintf f "let %s " (map_name n);
-    List.iter (function
-      | Field((_,n,(_,_)),Ignore) 
-      | Field((_,n,(_,_)),Nothing) -> fprintf f "~%s " n
-      | _ -> ()) p;
+    write_asm_args f p;
     fprintf f "= Types.I.(\n";
     (* function body *)
     let v = List.fold_left (fun acc i ->
@@ -222,7 +228,7 @@ let write_asm_ml f instrs =
     fprintf f "  0x%lxl)\n\n" v
   ) instrs
 
-let write_asm_mli f instrs = 
+let write_asm_raw_mli f instrs = 
   let open Printf in
   List.iter (fun (n,p) ->
     fprintf f "val %s : " (map_name n);
@@ -232,6 +238,59 @@ let write_asm_mli f instrs =
       | _ -> ()) p;
     fprintf f "Types.I.t\n"
   ) instrs
+
+(* we want to rewrite certain immediate fields to be easier to deal with *)
+let get_imm_fields fields = 
+  let imm_fields = [`bimm12hi; `bimm12lo; `imm20; `jimm20; `imm12; 
+                    `imm12hi; `imm12lo; `shamt; `shamtw; ]
+  in
+  let rec f = function 
+    | [] -> [] 
+    | Field ((x,_,_),_) :: tl when List.mem x imm_fields -> x :: f tl 
+    | _ :: tl -> f tl 
+  in 
+  f fields
+
+let write_asm_ml f instrs = 
+  let open Printf in
+  List.iter (fun (n,p) ->
+    let n = map_name n in
+    let imm = get_imm_fields p in
+    if imm = [] then fprintf f "let %s = Asm_raw.%s\n" n n
+    else begin 
+      let p = List.filter (function Field((x,_,_),_) -> not (List.mem x imm) | _ -> false) p in
+      fprintf f "let %s " n;
+      write_asm_args f p;
+      fprintf f "~imm = ";
+      let fmt = 
+        match imm with
+        | [`imm20] -> "u_imm"
+        | [`imm12] -> "i_imm"
+        | [`jimm20] -> "j_imm"
+        | [`shamt] -> "sh_imm"
+        | [`shamtw] -> "shw_imm"
+        | [`bimm12hi; `bimm12lo] -> "b_imm"
+        | [`imm12hi; `imm12lo] -> "s_imm"
+        | _ -> failwith "unexpected immediate field combination"
+      in
+      fprintf f "Imm.%s (Asm_raw.%s " fmt n;
+      write_asm_args f p;
+      fprintf f ") ~imm\n" 
+    end
+  ) instrs
+
+let write_asm_mli f instrs = 
+  let instrs = 
+    List.map 
+      (fun (n,p) ->
+        let imm = get_imm_fields p in
+        if imm = [] then n,p
+        else
+          let p = List.filter (function Field((x,_,_),_) -> not (List.mem x imm) | _ -> false) p in
+          n,(p@[Field((`imm,"imm",(0,0)),Nothing)]))
+    instrs
+  in
+  write_asm_raw_mli f instrs
 
 let write_qcheck_suite f instrs = 
   let open Printf in
@@ -255,7 +314,7 @@ let write_qcheck_suite f instrs =
 "  QCheck.( mk_test ~name:\"%s\" ~n 
     ~pp:PP.(QCRV.PP.%s) ~limit:2
     Arbitrary.(QCRV.%s) 
-    (fun (%s) -> f `%s (Asm.%s %s)));
+    (fun (%s) -> f `%s (Asm_raw.%s %s)));
 " n liftpp lift tuple (map_name n) (map_name n) args;
     end
   ) instrs;

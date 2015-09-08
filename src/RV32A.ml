@@ -81,7 +81,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let amoadd_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
   (((of_int rd) &: 0x1fl) <<: 7) |:
@@ -161,53 +161,68 @@ let sc_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
 
 end
 
+module Asm = struct
+
+let amoadd_w = Asm_raw.amoadd_w
+let amoxor_w = Asm_raw.amoxor_w
+let amoor_w = Asm_raw.amoor_w
+let amoand_w = Asm_raw.amoand_w
+let amomin_w = Asm_raw.amomin_w
+let amomax_w = Asm_raw.amomax_w
+let amominu_w = Asm_raw.amominu_w
+let amomaxu_w = Asm_raw.amomaxu_w
+let amoswap_w = Asm_raw.amoswap_w
+let lr_w = Asm_raw.lr_w
+let sc_w = Asm_raw.sc_w
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"amoadd.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amoadd_w (Asm.amoadd_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amoadd_w (Asm_raw.amoadd_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amoxor.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amoxor_w (Asm.amoxor_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amoxor_w (Asm_raw.amoxor_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amoor.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amoor_w (Asm.amoor_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amoor_w (Asm_raw.amoor_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amoand.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amoand_w (Asm.amoand_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amoand_w (Asm_raw.amoand_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amomin.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amomin_w (Asm.amomin_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amomin_w (Asm_raw.amomin_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amomax.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amomax_w (Asm.amomax_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amomax_w (Asm_raw.amomax_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amominu.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amominu_w (Asm.amominu_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amominu_w (Asm_raw.amominu_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amomaxu.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amomaxu_w (Asm.amomaxu_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amomaxu_w (Asm_raw.amomaxu_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"amoswap.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `amoswap_w (Asm.amoswap_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `amoswap_w (Asm_raw.amoswap_w ~rd ~rs1 ~rs2 ~aqrl)));
   QCheck.( mk_test ~name:"lr.w" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, aqrl) -> f `lr_w (Asm.lr_w ~rd ~rs1 ~aqrl)));
+    (fun (rd, rs1, aqrl) -> f `lr_w (Asm_raw.lr_w ~rd ~rs1 ~aqrl)));
   QCheck.( mk_test ~name:"sc.w" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 4)) 
-    (fun (rd, rs1, rs2, aqrl) -> f `sc_w (Asm.sc_w ~rd ~rs1 ~rs2 ~aqrl)));
+    (fun (rd, rs1, rs2, aqrl) -> f `sc_w (Asm_raw.sc_w ~rd ~rs1 ~rs2 ~aqrl)));
 ]
 
 end

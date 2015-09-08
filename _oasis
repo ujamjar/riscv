@@ -15,7 +15,7 @@ Library Riscv
   Path:          src
   Findlibname:   riscv
   Pack:          true
-  Modules:       Types,Mem,Super,QCRV,
+  Modules:       Types,Mem,Super,QCRV,Imm,
                  RV32A,RV32D,RV32F,RV32G,RV32I,RV32M,RV64A,RV64D,
                  RV64F,RV64G,RV64I,RV64M,RVC,RVCUSTOM,RVPSEUDO,RVSYS,
                  Load_elf,Cpu,Instr,Sim

@@ -46,7 +46,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let fcvt_l_s ~rd ~rs1 ~rm = Types.I.(
   (((of_int rd) &: 0x1fl) <<: 7) |:
@@ -74,25 +74,33 @@ let fcvt_s_lu ~rd ~rs1 ~rm = Types.I.(
 
 end
 
+module Asm = struct
+
+let fcvt_l_s = Asm_raw.fcvt_l_s
+let fcvt_lu_s = Asm_raw.fcvt_lu_s
+let fcvt_s_l = Asm_raw.fcvt_s_l
+let fcvt_s_lu = Asm_raw.fcvt_s_lu
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"fcvt.l.s" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_l_s (Asm.fcvt_l_s ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_l_s (Asm_raw.fcvt_l_s ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.lu.s" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_lu_s (Asm.fcvt_lu_s ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_lu_s (Asm_raw.fcvt_lu_s ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.s.l" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_s_l (Asm.fcvt_s_l ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_s_l (Asm_raw.fcvt_s_l ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.s.lu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_s_lu (Asm.fcvt_s_lu ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_s_lu (Asm_raw.fcvt_s_lu ~rd ~rs1 ~rm)));
 ]
 
 end

@@ -1,10 +1,10 @@
 # OASIS_START
-# DO NOT EDIT (digest: eeb2f68424209af7fabaf02fcffa595d)
+# DO NOT EDIT (digest: eeb2cef4a42ae1f6b9414e9f07738204)
 Types
-Instr
 Mem
 Super
 QCRV
+Imm
 RV32A
 RV32D
 RV32F
@@ -23,5 +23,6 @@ RVPSEUDO
 RVSYS
 Load_elf
 Cpu
+Instr
 Sim
 # OASIS_STOP

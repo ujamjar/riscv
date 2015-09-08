@@ -156,7 +156,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let fld ~rd ~rs1 ~imm12 = Types.I.(
   (((of_int rd) &: 0x1fl) <<: 7) |:
@@ -328,113 +328,143 @@ let fnmadd_d ~rd ~rs1 ~rs2 ~rs3 ~rm = Types.I.(
 
 end
 
+module Asm = struct
+
+let fld ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.fld ~rd ~rs1 ) ~imm
+let fsd ~rs1 ~rs2 ~imm = Imm.s_imm (Asm_raw.fsd ~rs1 ~rs2 ) ~imm
+let fadd_d = Asm_raw.fadd_d
+let fsub_d = Asm_raw.fsub_d
+let fmul_d = Asm_raw.fmul_d
+let fdiv_d = Asm_raw.fdiv_d
+let fsgnj_d = Asm_raw.fsgnj_d
+let fsgnjn_d = Asm_raw.fsgnjn_d
+let fsgnjx_d = Asm_raw.fsgnjx_d
+let fmin_d = Asm_raw.fmin_d
+let fmax_d = Asm_raw.fmax_d
+let fcvt_s_d = Asm_raw.fcvt_s_d
+let fcvt_d_s = Asm_raw.fcvt_d_s
+let fsqrt_d = Asm_raw.fsqrt_d
+let fle_d = Asm_raw.fle_d
+let flt_d = Asm_raw.flt_d
+let feq_d = Asm_raw.feq_d
+let fcvt_w_d = Asm_raw.fcvt_w_d
+let fcvt_wu_d = Asm_raw.fcvt_wu_d
+let fclass_d = Asm_raw.fclass_d
+let fcvt_d_w = Asm_raw.fcvt_d_w
+let fcvt_d_wu = Asm_raw.fcvt_d_wu
+let fmadd_d = Asm_raw.fmadd_d
+let fmsub_d = Asm_raw.fmsub_d
+let fnmsub_d = Asm_raw.fnmsub_d
+let fnmadd_d = Asm_raw.fnmadd_d
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"fld" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `fld (Asm.fld ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `fld (Asm_raw.fld ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"fsd" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (imm12hi, rs1, rs2, imm12lo) -> f `fsd (Asm.fsd ~imm12hi ~rs1 ~rs2 ~imm12lo)));
+    (fun (imm12hi, rs1, rs2, imm12lo) -> f `fsd (Asm_raw.fsd ~imm12hi ~rs1 ~rs2 ~imm12lo)));
   QCheck.( mk_test ~name:"fadd.d" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rm) -> f `fadd_d (Asm.fadd_d ~rd ~rs1 ~rs2 ~rm)));
+    (fun (rd, rs1, rs2, rm) -> f `fadd_d (Asm_raw.fadd_d ~rd ~rs1 ~rs2 ~rm)));
   QCheck.( mk_test ~name:"fsub.d" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rm) -> f `fsub_d (Asm.fsub_d ~rd ~rs1 ~rs2 ~rm)));
+    (fun (rd, rs1, rs2, rm) -> f `fsub_d (Asm_raw.fsub_d ~rd ~rs1 ~rs2 ~rm)));
   QCheck.( mk_test ~name:"fmul.d" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rm) -> f `fmul_d (Asm.fmul_d ~rd ~rs1 ~rs2 ~rm)));
+    (fun (rd, rs1, rs2, rm) -> f `fmul_d (Asm_raw.fmul_d ~rd ~rs1 ~rs2 ~rm)));
   QCheck.( mk_test ~name:"fdiv.d" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rm) -> f `fdiv_d (Asm.fdiv_d ~rd ~rs1 ~rs2 ~rm)));
+    (fun (rd, rs1, rs2, rm) -> f `fdiv_d (Asm_raw.fdiv_d ~rd ~rs1 ~rs2 ~rm)));
   QCheck.( mk_test ~name:"fsgnj.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `fsgnj_d (Asm.fsgnj_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `fsgnj_d (Asm_raw.fsgnj_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"fsgnjn.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `fsgnjn_d (Asm.fsgnjn_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `fsgnjn_d (Asm_raw.fsgnjn_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"fsgnjx.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `fsgnjx_d (Asm.fsgnjx_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `fsgnjx_d (Asm_raw.fsgnjx_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"fmin.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `fmin_d (Asm.fmin_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `fmin_d (Asm_raw.fmin_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"fmax.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `fmax_d (Asm.fmax_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `fmax_d (Asm_raw.fmax_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"fcvt.s.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_s_d (Asm.fcvt_s_d ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_s_d (Asm_raw.fcvt_s_d ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.d.s" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_d_s (Asm.fcvt_d_s ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_d_s (Asm_raw.fcvt_d_s ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fsqrt.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fsqrt_d (Asm.fsqrt_d ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fsqrt_d (Asm_raw.fsqrt_d ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fle.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `fle_d (Asm.fle_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `fle_d (Asm_raw.fle_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"flt.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `flt_d (Asm.flt_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `flt_d (Asm_raw.flt_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"feq.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `feq_d (Asm.feq_d ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `feq_d (Asm_raw.feq_d ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"fcvt.w.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_w_d (Asm.fcvt_w_d ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_w_d (Asm_raw.fcvt_w_d ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.wu.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_wu_d (Asm.fcvt_wu_d ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_wu_d (Asm_raw.fcvt_wu_d ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fclass.d" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (rd, rs1) -> f `fclass_d (Asm.fclass_d ~rd ~rs1)));
+    (fun (rd, rs1) -> f `fclass_d (Asm_raw.fclass_d ~rd ~rs1)));
   QCheck.( mk_test ~name:"fcvt.d.w" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_d_w (Asm.fcvt_d_w ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_d_w (Asm_raw.fcvt_d_w ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.d.wu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_d_wu (Asm.fcvt_d_wu ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_d_wu (Asm_raw.fcvt_d_wu ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fmadd.d" ~n 
     ~pp:PP.(QCRV.PP.tuple5 int int int int int) ~limit:2
     Arbitrary.(QCRV.tuple5 (int 32) (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rs3, rm) -> f `fmadd_d (Asm.fmadd_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
+    (fun (rd, rs1, rs2, rs3, rm) -> f `fmadd_d (Asm_raw.fmadd_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
   QCheck.( mk_test ~name:"fmsub.d" ~n 
     ~pp:PP.(QCRV.PP.tuple5 int int int int int) ~limit:2
     Arbitrary.(QCRV.tuple5 (int 32) (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rs3, rm) -> f `fmsub_d (Asm.fmsub_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
+    (fun (rd, rs1, rs2, rs3, rm) -> f `fmsub_d (Asm_raw.fmsub_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
   QCheck.( mk_test ~name:"fnmsub.d" ~n 
     ~pp:PP.(QCRV.PP.tuple5 int int int int int) ~limit:2
     Arbitrary.(QCRV.tuple5 (int 32) (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rs3, rm) -> f `fnmsub_d (Asm.fnmsub_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
+    (fun (rd, rs1, rs2, rs3, rm) -> f `fnmsub_d (Asm_raw.fnmsub_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
   QCheck.( mk_test ~name:"fnmadd.d" ~n 
     ~pp:PP.(QCRV.PP.tuple5 int int int int int) ~limit:2
     Arbitrary.(QCRV.tuple5 (int 32) (int 32) (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rs2, rs3, rm) -> f `fnmadd_d (Asm.fnmadd_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
+    (fun (rd, rs1, rs2, rs3, rm) -> f `fnmadd_d (Asm_raw.fnmadd_d ~rd ~rs1 ~rs2 ~rs3 ~rm)));
 ]
 
 end

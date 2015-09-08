@@ -110,6 +110,10 @@ let write_module m =
   fprintf mli "val fields : (t * Types.Fields.t list) list\n\n";
   fprintf mli "end\n\n";
 
+  fprintf mli "module Asm_raw : sig\n\n";
+  Opcodes.write_asm_raw_mli mli instrs;
+  fprintf mli "\nend\n\n";
+
   fprintf mli "module Asm : sig\n\n";
   Opcodes.write_asm_mli mli instrs;
   fprintf mli "\nend\n\n";
@@ -126,6 +130,10 @@ let write_module m =
   write_fields ml instrs;
   fprintf ml "end\n\n";
 
+  fprintf ml "module Asm_raw = struct\n\n";
+  Opcodes.write_asm_raw_ml ml instrs;
+  fprintf ml "end\n\n";
+
   fprintf ml "module Asm = struct\n\n";
   Opcodes.write_asm_ml ml instrs;
   fprintf ml "end\n\n";
@@ -138,6 +146,6 @@ let write_module m =
   close_out ml;
   close_out mli
 
-let () = List.iter write_module modules
+let run () = List.iter write_module modules
 
 

@@ -54,13 +54,13 @@ module T = struct
 
 end
 
-module Asm = struct
-  include RV32I.Asm
-  include RV32M.Asm
-  include RV32A.Asm
-  include RV32F.Asm
-  include RV32D.Asm
-  include RVSYS.Asm
+module Asm_raw = struct
+  include RV32I.Asm_raw
+  include RV32M.Asm_raw
+  include RV32A.Asm_raw
+  include RV32F.Asm_raw
+  include RV32D.Asm_raw
+  include RVSYS.Asm_raw
 end
 
 module Test = struct

@@ -56,7 +56,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let fcvt_l_d ~rd ~rs1 ~rm = Types.I.(
   (((of_int rd) &: 0x1fl) <<: 7) |:
@@ -94,33 +94,43 @@ let fmv_d_x ~rd ~rs1 = Types.I.(
 
 end
 
+module Asm = struct
+
+let fcvt_l_d = Asm_raw.fcvt_l_d
+let fcvt_lu_d = Asm_raw.fcvt_lu_d
+let fmv_x_d = Asm_raw.fmv_x_d
+let fcvt_d_l = Asm_raw.fcvt_d_l
+let fcvt_d_lu = Asm_raw.fcvt_d_lu
+let fmv_d_x = Asm_raw.fmv_d_x
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"fcvt.l.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_l_d (Asm.fcvt_l_d ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_l_d (Asm_raw.fcvt_l_d ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.lu.d" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_lu_d (Asm.fcvt_lu_d ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_lu_d (Asm_raw.fcvt_lu_d ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fmv.x.d" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (rd, rs1) -> f `fmv_x_d (Asm.fmv_x_d ~rd ~rs1)));
+    (fun (rd, rs1) -> f `fmv_x_d (Asm_raw.fmv_x_d ~rd ~rs1)));
   QCheck.( mk_test ~name:"fcvt.d.l" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_d_l (Asm.fcvt_d_l ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_d_l (Asm_raw.fcvt_d_l ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fcvt.d.lu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 8)) 
-    (fun (rd, rs1, rm) -> f `fcvt_d_lu (Asm.fcvt_d_lu ~rd ~rs1 ~rm)));
+    (fun (rd, rs1, rm) -> f `fcvt_d_lu (Asm_raw.fcvt_d_lu ~rd ~rs1 ~rm)));
   QCheck.( mk_test ~name:"fmv.d.x" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (rd, rs1) -> f `fmv_d_x (Asm.fmv_d_x ~rd ~rs1)));
+    (fun (rd, rs1) -> f `fmv_d_x (Asm_raw.fmv_d_x ~rd ~rs1)));
 ]
 
 end

@@ -221,7 +221,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let beq ~bimm12hi ~rs1 ~rs2 ~bimm12lo = Types.I.(
   (((of_int bimm12hi) &: 0x7fl) <<: 25) |:
@@ -461,161 +461,204 @@ let fence_i = Types.I.(
 
 end
 
+module Asm = struct
+
+let beq ~rs1 ~rs2 ~imm = Imm.b_imm (Asm_raw.beq ~rs1 ~rs2 ) ~imm
+let bne ~rs1 ~rs2 ~imm = Imm.b_imm (Asm_raw.bne ~rs1 ~rs2 ) ~imm
+let blt ~rs1 ~rs2 ~imm = Imm.b_imm (Asm_raw.blt ~rs1 ~rs2 ) ~imm
+let bge ~rs1 ~rs2 ~imm = Imm.b_imm (Asm_raw.bge ~rs1 ~rs2 ) ~imm
+let bltu ~rs1 ~rs2 ~imm = Imm.b_imm (Asm_raw.bltu ~rs1 ~rs2 ) ~imm
+let bgeu ~rs1 ~rs2 ~imm = Imm.b_imm (Asm_raw.bgeu ~rs1 ~rs2 ) ~imm
+let jalr ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.jalr ~rd ~rs1 ) ~imm
+let jal ~rd ~imm = Imm.j_imm (Asm_raw.jal ~rd ) ~imm
+let lui ~rd ~imm = Imm.u_imm (Asm_raw.lui ~rd ) ~imm
+let auipc ~rd ~imm = Imm.u_imm (Asm_raw.auipc ~rd ) ~imm
+let addi ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.addi ~rd ~rs1 ) ~imm
+let slli ~rd ~rs1 ~imm = Imm.sh_imm (Asm_raw.slli ~rd ~rs1 ) ~imm
+let slti ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.slti ~rd ~rs1 ) ~imm
+let sltiu ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.sltiu ~rd ~rs1 ) ~imm
+let xori ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.xori ~rd ~rs1 ) ~imm
+let srli ~rd ~rs1 ~imm = Imm.sh_imm (Asm_raw.srli ~rd ~rs1 ) ~imm
+let srai ~rd ~rs1 ~imm = Imm.sh_imm (Asm_raw.srai ~rd ~rs1 ) ~imm
+let ori ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.ori ~rd ~rs1 ) ~imm
+let andi ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.andi ~rd ~rs1 ) ~imm
+let add = Asm_raw.add
+let sub = Asm_raw.sub
+let sll = Asm_raw.sll
+let slt = Asm_raw.slt
+let sltu = Asm_raw.sltu
+let xor_ = Asm_raw.xor_
+let srl = Asm_raw.srl
+let sra = Asm_raw.sra
+let or_ = Asm_raw.or_
+let and_ = Asm_raw.and_
+let lb ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lb ~rd ~rs1 ) ~imm
+let lh ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lh ~rd ~rs1 ) ~imm
+let lw ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lw ~rd ~rs1 ) ~imm
+let lbu ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lbu ~rd ~rs1 ) ~imm
+let lhu ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lhu ~rd ~rs1 ) ~imm
+let sb ~rs1 ~rs2 ~imm = Imm.s_imm (Asm_raw.sb ~rs1 ~rs2 ) ~imm
+let sh ~rs1 ~rs2 ~imm = Imm.s_imm (Asm_raw.sh ~rs1 ~rs2 ) ~imm
+let sw ~rs1 ~rs2 ~imm = Imm.s_imm (Asm_raw.sw ~rs1 ~rs2 ) ~imm
+let fence = Asm_raw.fence
+let fence_i = Asm_raw.fence_i
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"beq" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `beq (Asm.beq ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `beq (Asm_raw.beq ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
   QCheck.( mk_test ~name:"bne" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bne (Asm.bne ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bne (Asm_raw.bne ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
   QCheck.( mk_test ~name:"blt" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `blt (Asm.blt ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `blt (Asm_raw.blt ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
   QCheck.( mk_test ~name:"bge" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bge (Asm.bge ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bge (Asm_raw.bge ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
   QCheck.( mk_test ~name:"bltu" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bltu (Asm.bltu ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bltu (Asm_raw.bltu ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
   QCheck.( mk_test ~name:"bgeu" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bgeu (Asm.bgeu ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
+    (fun (bimm12hi, rs1, rs2, bimm12lo) -> f `bgeu (Asm_raw.bgeu ~bimm12hi ~rs1 ~rs2 ~bimm12lo)));
   QCheck.( mk_test ~name:"jalr" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `jalr (Asm.jalr ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `jalr (Asm_raw.jalr ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"jal" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 1048576)) 
-    (fun (rd, jimm20) -> f `jal (Asm.jal ~rd ~jimm20)));
+    (fun (rd, jimm20) -> f `jal (Asm_raw.jal ~rd ~jimm20)));
   QCheck.( mk_test ~name:"lui" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 1048576)) 
-    (fun (rd, imm20) -> f `lui (Asm.lui ~rd ~imm20)));
+    (fun (rd, imm20) -> f `lui (Asm_raw.lui ~rd ~imm20)));
   QCheck.( mk_test ~name:"auipc" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 1048576)) 
-    (fun (rd, imm20) -> f `auipc (Asm.auipc ~rd ~imm20)));
+    (fun (rd, imm20) -> f `auipc (Asm_raw.auipc ~rd ~imm20)));
   QCheck.( mk_test ~name:"addi" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `addi (Asm.addi ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `addi (Asm_raw.addi ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"slli" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 64)) 
-    (fun (rd, rs1, shamt) -> f `slli (Asm.slli ~rd ~rs1 ~shamt)));
+    (fun (rd, rs1, shamt) -> f `slli (Asm_raw.slli ~rd ~rs1 ~shamt)));
   QCheck.( mk_test ~name:"slti" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `slti (Asm.slti ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `slti (Asm_raw.slti ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"sltiu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `sltiu (Asm.sltiu ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `sltiu (Asm_raw.sltiu ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"xori" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `xori (Asm.xori ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `xori (Asm_raw.xori ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"srli" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 64)) 
-    (fun (rd, rs1, shamt) -> f `srli (Asm.srli ~rd ~rs1 ~shamt)));
+    (fun (rd, rs1, shamt) -> f `srli (Asm_raw.srli ~rd ~rs1 ~shamt)));
   QCheck.( mk_test ~name:"srai" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 64)) 
-    (fun (rd, rs1, shamt) -> f `srai (Asm.srai ~rd ~rs1 ~shamt)));
+    (fun (rd, rs1, shamt) -> f `srai (Asm_raw.srai ~rd ~rs1 ~shamt)));
   QCheck.( mk_test ~name:"ori" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `ori (Asm.ori ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `ori (Asm_raw.ori ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"andi" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `andi (Asm.andi ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `andi (Asm_raw.andi ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"add" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `add (Asm.add ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `add (Asm_raw.add ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"sub" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `sub (Asm.sub ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `sub (Asm_raw.sub ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"sll" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `sll (Asm.sll ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `sll (Asm_raw.sll ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"slt" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `slt (Asm.slt ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `slt (Asm_raw.slt ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"sltu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `sltu (Asm.sltu ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `sltu (Asm_raw.sltu ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"xor" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `xor_ (Asm.xor_ ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `xor_ (Asm_raw.xor_ ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"srl" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `srl (Asm.srl ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `srl (Asm_raw.srl ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"sra" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `sra (Asm.sra ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `sra (Asm_raw.sra ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"or" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `or_ (Asm.or_ ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `or_ (Asm_raw.or_ ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"and" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `and_ (Asm.and_ ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `and_ (Asm_raw.and_ ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"lb" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `lb (Asm.lb ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `lb (Asm_raw.lb ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"lh" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `lh (Asm.lh ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `lh (Asm_raw.lh ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"lw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `lw (Asm.lw ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `lw (Asm_raw.lw ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"lbu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `lbu (Asm.lbu ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `lbu (Asm_raw.lbu ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"lhu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `lhu (Asm.lhu ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `lhu (Asm_raw.lhu ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"sb" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sb (Asm.sb ~imm12hi ~rs1 ~rs2 ~imm12lo)));
+    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sb (Asm_raw.sb ~imm12hi ~rs1 ~rs2 ~imm12lo)));
   QCheck.( mk_test ~name:"sh" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sh (Asm.sh ~imm12hi ~rs1 ~rs2 ~imm12lo)));
+    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sh (Asm_raw.sh ~imm12hi ~rs1 ~rs2 ~imm12lo)));
   QCheck.( mk_test ~name:"sw" ~n 
     ~pp:PP.(QCRV.PP.tuple4 int int int int) ~limit:2
     Arbitrary.(QCRV.tuple4 (int 128) (int 32) (int 32) (int 32)) 
-    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sw (Asm.sw ~imm12hi ~rs1 ~rs2 ~imm12lo)));
+    (fun (imm12hi, rs1, rs2, imm12lo) -> f `sw (Asm_raw.sw ~imm12hi ~rs1 ~rs2 ~imm12lo)));
   QCheck.( mk_test ~name:"fence" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 16) (int 16)) 
-    (fun (pred, succ) -> f `fence (Asm.fence ~pred ~succ)));
+    (fun (pred, succ) -> f `fence (Asm_raw.fence ~pred ~succ)));
 ]
 
 end

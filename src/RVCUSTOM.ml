@@ -146,7 +146,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let _custom0 ~rd ~rs1 ~imm12 = Types.I.(
   (((of_int rd) &: 0x1fl) <<: 7) |:
@@ -294,105 +294,133 @@ let _custom3_rd_rs1_rs2 ~rd ~rs1 ~imm12 = Types.I.(
 
 end
 
+module Asm = struct
+
+let _custom0 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom0 ~rd ~rs1 ) ~imm
+let _custom0_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom0_rs1 ~rd ~rs1 ) ~imm
+let _custom0_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom0_rs1_rs2 ~rd ~rs1 ) ~imm
+let _custom0_rd ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom0_rd ~rd ~rs1 ) ~imm
+let _custom0_rd_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom0_rd_rs1 ~rd ~rs1 ) ~imm
+let _custom0_rd_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom0_rd_rs1_rs2 ~rd ~rs1 ) ~imm
+let _custom1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom1 ~rd ~rs1 ) ~imm
+let _custom1_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom1_rs1 ~rd ~rs1 ) ~imm
+let _custom1_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom1_rs1_rs2 ~rd ~rs1 ) ~imm
+let _custom1_rd ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom1_rd ~rd ~rs1 ) ~imm
+let _custom1_rd_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom1_rd_rs1 ~rd ~rs1 ) ~imm
+let _custom1_rd_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom1_rd_rs1_rs2 ~rd ~rs1 ) ~imm
+let _custom2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom2 ~rd ~rs1 ) ~imm
+let _custom2_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom2_rs1 ~rd ~rs1 ) ~imm
+let _custom2_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom2_rs1_rs2 ~rd ~rs1 ) ~imm
+let _custom2_rd ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom2_rd ~rd ~rs1 ) ~imm
+let _custom2_rd_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom2_rd_rs1 ~rd ~rs1 ) ~imm
+let _custom2_rd_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom2_rd_rs1_rs2 ~rd ~rs1 ) ~imm
+let _custom3 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom3 ~rd ~rs1 ) ~imm
+let _custom3_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom3_rs1 ~rd ~rs1 ) ~imm
+let _custom3_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom3_rs1_rs2 ~rd ~rs1 ) ~imm
+let _custom3_rd ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom3_rd ~rd ~rs1 ) ~imm
+let _custom3_rd_rs1 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom3_rd_rs1 ~rd ~rs1 ) ~imm
+let _custom3_rd_rs1_rs2 ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw._custom3_rd_rs1_rs2 ~rd ~rs1 ) ~imm
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"@custom0" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom0 (Asm._custom0 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom0 (Asm_raw._custom0 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom0.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom0_rs1 (Asm._custom0_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom0_rs1 (Asm_raw._custom0_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom0.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom0_rs1_rs2 (Asm._custom0_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom0_rs1_rs2 (Asm_raw._custom0_rs1_rs2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom0.rd" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom0_rd (Asm._custom0_rd ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom0_rd (Asm_raw._custom0_rd ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom0.rd.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom0_rd_rs1 (Asm._custom0_rd_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom0_rd_rs1 (Asm_raw._custom0_rd_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom0.rd.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom0_rd_rs1_rs2 (Asm._custom0_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom0_rd_rs1_rs2 (Asm_raw._custom0_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom1 (Asm._custom1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom1 (Asm_raw._custom1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom1.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom1_rs1 (Asm._custom1_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom1_rs1 (Asm_raw._custom1_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom1.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom1_rs1_rs2 (Asm._custom1_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom1_rs1_rs2 (Asm_raw._custom1_rs1_rs2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom1.rd" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom1_rd (Asm._custom1_rd ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom1_rd (Asm_raw._custom1_rd ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom1.rd.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom1_rd_rs1 (Asm._custom1_rd_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom1_rd_rs1 (Asm_raw._custom1_rd_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom1.rd.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom1_rd_rs1_rs2 (Asm._custom1_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom1_rd_rs1_rs2 (Asm_raw._custom1_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom2 (Asm._custom2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom2 (Asm_raw._custom2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom2.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom2_rs1 (Asm._custom2_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom2_rs1 (Asm_raw._custom2_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom2.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom2_rs1_rs2 (Asm._custom2_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom2_rs1_rs2 (Asm_raw._custom2_rs1_rs2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom2.rd" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom2_rd (Asm._custom2_rd ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom2_rd (Asm_raw._custom2_rd ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom2.rd.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom2_rd_rs1 (Asm._custom2_rd_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom2_rd_rs1 (Asm_raw._custom2_rd_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom2.rd.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom2_rd_rs1_rs2 (Asm._custom2_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom2_rd_rs1_rs2 (Asm_raw._custom2_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom3" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom3 (Asm._custom3 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom3 (Asm_raw._custom3 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom3.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom3_rs1 (Asm._custom3_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom3_rs1 (Asm_raw._custom3_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom3.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom3_rs1_rs2 (Asm._custom3_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom3_rs1_rs2 (Asm_raw._custom3_rs1_rs2 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom3.rd" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom3_rd (Asm._custom3_rd ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom3_rd (Asm_raw._custom3_rd ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom3.rd.rs1" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom3_rd_rs1 (Asm._custom3_rd_rs1 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom3_rd_rs1 (Asm_raw._custom3_rd_rs1 ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"@custom3.rd.rs1.rs2" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `_custom3_rd_rs1_rs2 (Asm._custom3_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `_custom3_rd_rs1_rs2 (Asm_raw._custom3_rd_rs1_rs2 ~rd ~rs1 ~imm12)));
 ]
 
 end

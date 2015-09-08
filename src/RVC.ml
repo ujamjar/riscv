@@ -196,7 +196,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let c_li ~cimm6 ~crd = Types.I.(
   (((of_int cimm6) &: 0x3fl) <<: 10) |:
@@ -383,145 +383,183 @@ let c_and3 ~crds ~crs1s ~crs2bs = Types.I.(
 
 end
 
+module Asm = struct
+
+let c_li = Asm_raw.c_li
+let c_addi = Asm_raw.c_addi
+let c_addiw = Asm_raw.c_addiw
+let c_ldsp = Asm_raw.c_ldsp
+let c_lwsp = Asm_raw.c_lwsp
+let c_sdsp = Asm_raw.c_sdsp
+let c_swsp = Asm_raw.c_swsp
+let c_lw0 = Asm_raw.c_lw0
+let c_ld0 = Asm_raw.c_ld0
+let c_add = Asm_raw.c_add
+let c_sub = Asm_raw.c_sub
+let c_move = Asm_raw.c_move
+let c_j = Asm_raw.c_j
+let c_ld = Asm_raw.c_ld
+let c_lw = Asm_raw.c_lw
+let c_sd = Asm_raw.c_sd
+let c_sw = Asm_raw.c_sw
+let c_beq = Asm_raw.c_beq
+let c_bne = Asm_raw.c_bne
+let c_flw = Asm_raw.c_flw
+let c_fld = Asm_raw.c_fld
+let c_fsw = Asm_raw.c_fsw
+let c_fsd = Asm_raw.c_fsd
+let c_slli = Asm_raw.c_slli
+let c_slli32 = Asm_raw.c_slli32
+let c_srli = Asm_raw.c_srli
+let c_srli32 = Asm_raw.c_srli32
+let c_srai = Asm_raw.c_srai
+let c_srai32 = Asm_raw.c_srai32
+let c_slliw = Asm_raw.c_slliw
+let c_add3 = Asm_raw.c_add3
+let c_sub3 = Asm_raw.c_sub3
+let c_or3 = Asm_raw.c_or3
+let c_and3 = Asm_raw.c_and3
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"c.li" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
-    (fun (cimm6, crd) -> f `c_li (Asm.c_li ~cimm6 ~crd)));
+    (fun (cimm6, crd) -> f `c_li (Asm_raw.c_li ~cimm6 ~crd)));
   QCheck.( mk_test ~name:"c.addi" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
-    (fun (cimm6, crd) -> f `c_addi (Asm.c_addi ~cimm6 ~crd)));
+    (fun (cimm6, crd) -> f `c_addi (Asm_raw.c_addi ~cimm6 ~crd)));
   QCheck.( mk_test ~name:"c.addiw" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
-    (fun (cimm6, crd) -> f `c_addiw (Asm.c_addiw ~cimm6 ~crd)));
+    (fun (cimm6, crd) -> f `c_addiw (Asm_raw.c_addiw ~cimm6 ~crd)));
   QCheck.( mk_test ~name:"c.ldsp" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
-    (fun (cimm6, crd) -> f `c_ldsp (Asm.c_ldsp ~cimm6 ~crd)));
+    (fun (cimm6, crd) -> f `c_ldsp (Asm_raw.c_ldsp ~cimm6 ~crd)));
   QCheck.( mk_test ~name:"c.lwsp" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
-    (fun (cimm6, crd) -> f `c_lwsp (Asm.c_lwsp ~cimm6 ~crd)));
+    (fun (cimm6, crd) -> f `c_lwsp (Asm_raw.c_lwsp ~cimm6 ~crd)));
   QCheck.( mk_test ~name:"c.sdsp" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
-    (fun (cimm6, crd) -> f `c_sdsp (Asm.c_sdsp ~cimm6 ~crd)));
+    (fun (cimm6, crd) -> f `c_sdsp (Asm_raw.c_sdsp ~cimm6 ~crd)));
   QCheck.( mk_test ~name:"c.swsp" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 64) (int 32)) 
-    (fun (cimm6, crd) -> f `c_swsp (Asm.c_swsp ~cimm6 ~crd)));
+    (fun (cimm6, crd) -> f `c_swsp (Asm_raw.c_swsp ~cimm6 ~crd)));
   QCheck.( mk_test ~name:"c.lw0" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (crs1, crd) -> f `c_lw0 (Asm.c_lw0 ~crs1 ~crd)));
+    (fun (crs1, crd) -> f `c_lw0 (Asm_raw.c_lw0 ~crs1 ~crd)));
   QCheck.( mk_test ~name:"c.ld0" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (crs1, crd) -> f `c_ld0 (Asm.c_ld0 ~crs1 ~crd)));
+    (fun (crs1, crd) -> f `c_ld0 (Asm_raw.c_ld0 ~crs1 ~crd)));
   QCheck.( mk_test ~name:"c.add" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (crs1, crd) -> f `c_add (Asm.c_add ~crs1 ~crd)));
+    (fun (crs1, crd) -> f `c_add (Asm_raw.c_add ~crs1 ~crd)));
   QCheck.( mk_test ~name:"c.sub" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (crs1, crd) -> f `c_sub (Asm.c_sub ~crs1 ~crd)));
+    (fun (crs1, crd) -> f `c_sub (Asm_raw.c_sub ~crs1 ~crd)));
   QCheck.( mk_test ~name:"c.move" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 32) (int 32)) 
-    (fun (crs1, crd) -> f `c_move (Asm.c_move ~crs1 ~crd)));
+    (fun (crs1, crd) -> f `c_move (Asm_raw.c_move ~crs1 ~crd)));
   QCheck.( mk_test ~name:"c.j" ~n 
     ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
     Arbitrary.(QCRV.tuple1 (int 1024)) 
-    (fun (cimm10) -> f `c_j (Asm.c_j ~cimm10)));
+    (fun (cimm10) -> f `c_j (Asm_raw.c_j ~cimm10)));
   QCheck.( mk_test ~name:"c.ld" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crds, crs1s, cimm5) -> f `c_ld (Asm.c_ld ~crds ~crs1s ~cimm5)));
+    (fun (crds, crs1s, cimm5) -> f `c_ld (Asm_raw.c_ld ~crds ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.lw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crds, crs1s, cimm5) -> f `c_lw (Asm.c_lw ~crds ~crs1s ~cimm5)));
+    (fun (crds, crs1s, cimm5) -> f `c_lw (Asm_raw.c_lw ~crds ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.sd" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crs2s, crs1s, cimm5) -> f `c_sd (Asm.c_sd ~crs2s ~crs1s ~cimm5)));
+    (fun (crs2s, crs1s, cimm5) -> f `c_sd (Asm_raw.c_sd ~crs2s ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.sw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crs2s, crs1s, cimm5) -> f `c_sw (Asm.c_sw ~crs2s ~crs1s ~cimm5)));
+    (fun (crs2s, crs1s, cimm5) -> f `c_sw (Asm_raw.c_sw ~crs2s ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.beq" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crs2s, crs1s, cimm5) -> f `c_beq (Asm.c_beq ~crs2s ~crs1s ~cimm5)));
+    (fun (crs2s, crs1s, cimm5) -> f `c_beq (Asm_raw.c_beq ~crs2s ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.bne" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crs2s, crs1s, cimm5) -> f `c_bne (Asm.c_bne ~crs2s ~crs1s ~cimm5)));
+    (fun (crs2s, crs1s, cimm5) -> f `c_bne (Asm_raw.c_bne ~crs2s ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.flw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crds, crs1s, cimm5) -> f `c_flw (Asm.c_flw ~crds ~crs1s ~cimm5)));
+    (fun (crds, crs1s, cimm5) -> f `c_flw (Asm_raw.c_flw ~crds ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.fld" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crds, crs1s, cimm5) -> f `c_fld (Asm.c_fld ~crds ~crs1s ~cimm5)));
+    (fun (crds, crs1s, cimm5) -> f `c_fld (Asm_raw.c_fld ~crds ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.fsw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crs2s, crs1s, cimm5) -> f `c_fsw (Asm.c_fsw ~crs2s ~crs1s ~cimm5)));
+    (fun (crs2s, crs1s, cimm5) -> f `c_fsw (Asm_raw.c_fsw ~crs2s ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.fsd" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 32)) 
-    (fun (crs2s, crs1s, cimm5) -> f `c_fsd (Asm.c_fsd ~crs2s ~crs1s ~cimm5)));
+    (fun (crs2s, crs1s, cimm5) -> f `c_fsd (Asm_raw.c_fsd ~crs2s ~crs1s ~cimm5)));
   QCheck.( mk_test ~name:"c.slli" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
-    (fun (crds, cimm5) -> f `c_slli (Asm.c_slli ~crds ~cimm5)));
+    (fun (crds, cimm5) -> f `c_slli (Asm_raw.c_slli ~crds ~cimm5)));
   QCheck.( mk_test ~name:"c.slli32" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
-    (fun (crds, cimm5) -> f `c_slli32 (Asm.c_slli32 ~crds ~cimm5)));
+    (fun (crds, cimm5) -> f `c_slli32 (Asm_raw.c_slli32 ~crds ~cimm5)));
   QCheck.( mk_test ~name:"c.srli" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
-    (fun (crds, cimm5) -> f `c_srli (Asm.c_srli ~crds ~cimm5)));
+    (fun (crds, cimm5) -> f `c_srli (Asm_raw.c_srli ~crds ~cimm5)));
   QCheck.( mk_test ~name:"c.srli32" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
-    (fun (crds, cimm5) -> f `c_srli32 (Asm.c_srli32 ~crds ~cimm5)));
+    (fun (crds, cimm5) -> f `c_srli32 (Asm_raw.c_srli32 ~crds ~cimm5)));
   QCheck.( mk_test ~name:"c.srai" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
-    (fun (crds, cimm5) -> f `c_srai (Asm.c_srai ~crds ~cimm5)));
+    (fun (crds, cimm5) -> f `c_srai (Asm_raw.c_srai ~crds ~cimm5)));
   QCheck.( mk_test ~name:"c.srai32" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
-    (fun (crds, cimm5) -> f `c_srai32 (Asm.c_srai32 ~crds ~cimm5)));
+    (fun (crds, cimm5) -> f `c_srai32 (Asm_raw.c_srai32 ~crds ~cimm5)));
   QCheck.( mk_test ~name:"c.slliw" ~n 
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 8) (int 32)) 
-    (fun (crds, cimm5) -> f `c_slliw (Asm.c_slliw ~crds ~cimm5)));
+    (fun (crds, cimm5) -> f `c_slliw (Asm_raw.c_slliw ~crds ~cimm5)));
   QCheck.( mk_test ~name:"c.add3" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
-    (fun (crds, crs1s, crs2bs) -> f `c_add3 (Asm.c_add3 ~crds ~crs1s ~crs2bs)));
+    (fun (crds, crs1s, crs2bs) -> f `c_add3 (Asm_raw.c_add3 ~crds ~crs1s ~crs2bs)));
   QCheck.( mk_test ~name:"c.sub3" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
-    (fun (crds, crs1s, crs2bs) -> f `c_sub3 (Asm.c_sub3 ~crds ~crs1s ~crs2bs)));
+    (fun (crds, crs1s, crs2bs) -> f `c_sub3 (Asm_raw.c_sub3 ~crds ~crs1s ~crs2bs)));
   QCheck.( mk_test ~name:"c.or3" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
-    (fun (crds, crs1s, crs2bs) -> f `c_or3 (Asm.c_or3 ~crds ~crs1s ~crs2bs)));
+    (fun (crds, crs1s, crs2bs) -> f `c_or3 (Asm_raw.c_or3 ~crds ~crs1s ~crs2bs)));
   QCheck.( mk_test ~name:"c.and3" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 8) (int 8) (int 8)) 
-    (fun (crds, crs1s, crs2bs) -> f `c_and3 (Asm.c_and3 ~crds ~crs1s ~crs2bs)));
+    (fun (crds, crs1s, crs2bs) -> f `c_and3 (Asm_raw.c_and3 ~crds ~crs1s ~crs2bs)));
 ]
 
 end

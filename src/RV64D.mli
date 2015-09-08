@@ -19,6 +19,17 @@ val fields : (t * Types.Fields.t list) list
 
 end
 
+module Asm_raw : sig
+
+val fcvt_l_d : rd:int -> rs1:int -> rm:int -> Types.I.t
+val fcvt_lu_d : rd:int -> rs1:int -> rm:int -> Types.I.t
+val fmv_x_d : rd:int -> rs1:int -> Types.I.t
+val fcvt_d_l : rd:int -> rs1:int -> rm:int -> Types.I.t
+val fcvt_d_lu : rd:int -> rs1:int -> rm:int -> Types.I.t
+val fmv_d_x : rd:int -> rs1:int -> Types.I.t
+
+end
+
 module Asm : sig
 
 val fcvt_l_d : rd:int -> rs1:int -> rm:int -> Types.I.t

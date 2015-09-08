@@ -18,6 +18,16 @@ val fields : (t * Types.Fields.t list) list
 
 end
 
+module Asm_raw : sig
+
+val mulw : rd:int -> rs1:int -> rs2:int -> Types.I.t
+val divw : rd:int -> rs1:int -> rs2:int -> Types.I.t
+val divuw : rd:int -> rs1:int -> rs2:int -> Types.I.t
+val remw : rd:int -> rs1:int -> rs2:int -> Types.I.t
+val remuw : rd:int -> rs1:int -> rs2:int -> Types.I.t
+
+end
+
 module Asm : sig
 
 val mulw : rd:int -> rs1:int -> rs2:int -> Types.I.t

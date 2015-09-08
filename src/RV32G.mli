@@ -19,13 +19,13 @@ module T : sig
 
 end
 
-module Asm : sig
-  include module type of RV32I.Asm
-  include module type of RV32M.Asm
-  include module type of RV32A.Asm
-  include module type of RV32F.Asm
-  include module type of RV32D.Asm
-  include module type of RVSYS.Asm
+module Asm_raw : sig
+  include module type of RV32I.Asm_raw
+  include module type of RV32M.Asm_raw
+  include module type of RV32A.Asm_raw
+  include module type of RV32F.Asm_raw
+  include module type of RV32D.Asm_raw
+  include module type of RVSYS.Asm_raw
 end
 
 module Test : sig

@@ -51,7 +51,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let mulw ~rd ~rs1 ~rs2 = Types.I.(
   (((of_int rd) &: 0x1fl) <<: 7) |:
@@ -85,29 +85,38 @@ let remuw ~rd ~rs1 ~rs2 = Types.I.(
 
 end
 
+module Asm = struct
+
+let mulw = Asm_raw.mulw
+let divw = Asm_raw.divw
+let divuw = Asm_raw.divuw
+let remw = Asm_raw.remw
+let remuw = Asm_raw.remuw
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"mulw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `mulw (Asm.mulw ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `mulw (Asm_raw.mulw ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"divw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `divw (Asm.divw ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `divw (Asm_raw.divw ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"divuw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `divuw (Asm.divuw ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `divuw (Asm_raw.divuw ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"remw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `remw (Asm.remw ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `remw (Asm_raw.remw ~rd ~rs1 ~rs2)));
   QCheck.( mk_test ~name:"remuw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, rs2) -> f `remuw (Asm.remuw ~rd ~rs1 ~rs2)));
+    (fun (rd, rs1, rs2) -> f `remuw (Asm_raw.remuw ~rd ~rs1 ~rs2)));
 ]
 
 end

@@ -71,7 +71,7 @@ let fields =
 
 end
 
-module Asm = struct
+module Asm_raw = struct
 
 let scall = Types.I.(
   0x73l)
@@ -120,33 +120,46 @@ let csrrci ~rd ~rs1 ~imm12 = Types.I.(
 
 end
 
+module Asm = struct
+
+let scall = Asm_raw.scall
+let sbreak = Asm_raw.sbreak
+let sret = Asm_raw.sret
+let csrrw ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrw ~rd ~rs1 ) ~imm
+let csrrs ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrs ~rd ~rs1 ) ~imm
+let csrrc ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrc ~rd ~rs1 ) ~imm
+let csrrwi ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrwi ~rd ~rs1 ) ~imm
+let csrrsi ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrsi ~rd ~rs1 ) ~imm
+let csrrci ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrci ~rd ~rs1 ) ~imm
+end
+
 module Test = struct
 
 let suite f n = [
   QCheck.( mk_test ~name:"csrrw" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `csrrw (Asm.csrrw ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `csrrw (Asm_raw.csrrw ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"csrrs" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `csrrs (Asm.csrrs ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `csrrs (Asm_raw.csrrs ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"csrrc" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `csrrc (Asm.csrrc ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `csrrc (Asm_raw.csrrc ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"csrrwi" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `csrrwi (Asm.csrrwi ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `csrrwi (Asm_raw.csrrwi ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"csrrsi" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `csrrsi (Asm.csrrsi ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `csrrsi (Asm_raw.csrrsi ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"csrrci" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
-    (fun (rd, rs1, imm12) -> f `csrrci (Asm.csrrci ~rd ~rs1 ~imm12)));
+    (fun (rd, rs1, imm12) -> f `csrrci (Asm_raw.csrrci ~rd ~rs1 ~imm12)));
 ]
 
 end

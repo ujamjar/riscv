@@ -30,11 +30,33 @@ val fields : (t * Types.Fields.t list) list
 
 end
 
-module Asm : sig
+module Asm_raw : sig
 
 val _slli_rv32 : rd:int -> rs1:int -> shamtw:int -> Types.I.t
 val _srli_rv32 : rd:int -> rs1:int -> shamtw:int -> Types.I.t
 val _srai_rv32 : rd:int -> rs1:int -> shamtw:int -> Types.I.t
+val _frflags : rd:int -> Types.I.t
+val _fsflags : rd:int -> rs1:int -> Types.I.t
+val _fsflagsi : rd:int -> zimm:int -> Types.I.t
+val _frrm : rd:int -> Types.I.t
+val _fsrm : rd:int -> rs1:int -> Types.I.t
+val _fsrmi : rd:int -> zimm:int -> Types.I.t
+val _fscsr : rd:int -> rs1:int -> Types.I.t
+val _frcsr : rd:int -> Types.I.t
+val _rdcycle : rd:int -> Types.I.t
+val _rdtime : rd:int -> Types.I.t
+val _rdinstret : rd:int -> Types.I.t
+val _rdcycleh : rd:int -> Types.I.t
+val _rdtimeh : rd:int -> Types.I.t
+val _rdinstreth : rd:int -> Types.I.t
+
+end
+
+module Asm : sig
+
+val _slli_rv32 : rd:int -> rs1:int -> imm:int -> Types.I.t
+val _srli_rv32 : rd:int -> rs1:int -> imm:int -> Types.I.t
+val _srai_rv32 : rd:int -> rs1:int -> imm:int -> Types.I.t
 val _frflags : rd:int -> Types.I.t
 val _fsflags : rd:int -> rs1:int -> Types.I.t
 val _fsflagsi : rd:int -> zimm:int -> Types.I.t
