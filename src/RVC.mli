@@ -1,40 +1,31 @@
 module T : sig
 
 type t = [
+| `c_mv
+| `c_add
+| `c_fsd
+| `c_sw
+| `c_fsw
+| `c_addi4spn
+| `c_fld
+| `c_lw
+| `c_flw
+| `c_slli
+| `c_fsdsp
+| `c_swsp
+| `c_fswsp
+| `c_addw
+| `c_fldsp
+| `c_lwsp
+| `c_flwsp
+| `c_j
+| `c_jal
+| `c_beqz
+| `c_bnez
 | `c_li
+| `c_lui
 | `c_addi
 | `c_addiw
-| `c_ldsp
-| `c_lwsp
-| `c_sdsp
-| `c_swsp
-| `c_lw0
-| `c_ld0
-| `c_add
-| `c_sub
-| `c_move
-| `c_j
-| `c_ld
-| `c_lw
-| `c_sd
-| `c_sw
-| `c_beq
-| `c_bne
-| `c_flw
-| `c_fld
-| `c_fsw
-| `c_fsd
-| `c_slli
-| `c_slli32
-| `c_srli
-| `c_srli32
-| `c_srai
-| `c_srai32
-| `c_slliw
-| `c_add3
-| `c_sub3
-| `c_or3
-| `c_and3
 ]
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
@@ -49,79 +40,61 @@ end
 
 module Asm_raw : sig
 
-val c_li : cimm6:int -> crd:int -> Types.I.t
-val c_addi : cimm6:int -> crd:int -> Types.I.t
-val c_addiw : cimm6:int -> crd:int -> Types.I.t
-val c_ldsp : cimm6:int -> crd:int -> Types.I.t
-val c_lwsp : cimm6:int -> crd:int -> Types.I.t
-val c_sdsp : cimm6:int -> crd:int -> Types.I.t
-val c_swsp : cimm6:int -> crd:int -> Types.I.t
-val c_lw0 : crs1:int -> crd:int -> Types.I.t
-val c_ld0 : crs1:int -> crd:int -> Types.I.t
-val c_add : crs1:int -> crd:int -> Types.I.t
-val c_sub : crs1:int -> crd:int -> Types.I.t
-val c_move : crs1:int -> crd:int -> Types.I.t
-val c_j : cimm10:int -> Types.I.t
-val c_ld : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_lw : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_sd : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_sw : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_beq : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_bne : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_flw : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_fld : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_fsw : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_fsd : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_slli : crds:int -> cimm5:int -> Types.I.t
-val c_slli32 : crds:int -> cimm5:int -> Types.I.t
-val c_srli : crds:int -> cimm5:int -> Types.I.t
-val c_srli32 : crds:int -> cimm5:int -> Types.I.t
-val c_srai : crds:int -> cimm5:int -> Types.I.t
-val c_srai32 : crds:int -> cimm5:int -> Types.I.t
-val c_slliw : crds:int -> cimm5:int -> Types.I.t
-val c_add3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
-val c_sub3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
-val c_or3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
-val c_and3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
+val c_mv : Types.I.t
+val c_add : Types.I.t
+val c_fsd : Types.I.t
+val c_sw : Types.I.t
+val c_fsw : Types.I.t
+val c_addi4spn : Types.I.t
+val c_fld : Types.I.t
+val c_lw : Types.I.t
+val c_flw : Types.I.t
+val c_slli : Types.I.t
+val c_fsdsp : Types.I.t
+val c_swsp : Types.I.t
+val c_fswsp : Types.I.t
+val c_addw : Types.I.t
+val c_fldsp : Types.I.t
+val c_lwsp : Types.I.t
+val c_flwsp : Types.I.t
+val c_j : Types.I.t
+val c_jal : Types.I.t
+val c_beqz : Types.I.t
+val c_bnez : Types.I.t
+val c_li : Types.I.t
+val c_lui : Types.I.t
+val c_addi : Types.I.t
+val c_addiw : Types.I.t
 
 end
 
 module Asm : sig
 
-val c_li : cimm6:int -> crd:int -> Types.I.t
-val c_addi : cimm6:int -> crd:int -> Types.I.t
-val c_addiw : cimm6:int -> crd:int -> Types.I.t
-val c_ldsp : cimm6:int -> crd:int -> Types.I.t
-val c_lwsp : cimm6:int -> crd:int -> Types.I.t
-val c_sdsp : cimm6:int -> crd:int -> Types.I.t
-val c_swsp : cimm6:int -> crd:int -> Types.I.t
-val c_lw0 : crs1:int -> crd:int -> Types.I.t
-val c_ld0 : crs1:int -> crd:int -> Types.I.t
-val c_add : crs1:int -> crd:int -> Types.I.t
-val c_sub : crs1:int -> crd:int -> Types.I.t
-val c_move : crs1:int -> crd:int -> Types.I.t
-val c_j : cimm10:int -> Types.I.t
-val c_ld : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_lw : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_sd : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_sw : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_beq : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_bne : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_flw : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_fld : crds:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_fsw : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_fsd : crs2s:int -> crs1s:int -> cimm5:int -> Types.I.t
-val c_slli : crds:int -> cimm5:int -> Types.I.t
-val c_slli32 : crds:int -> cimm5:int -> Types.I.t
-val c_srli : crds:int -> cimm5:int -> Types.I.t
-val c_srli32 : crds:int -> cimm5:int -> Types.I.t
-val c_srai : crds:int -> cimm5:int -> Types.I.t
-val c_srai32 : crds:int -> cimm5:int -> Types.I.t
-val c_slliw : crds:int -> cimm5:int -> Types.I.t
-val c_add3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
-val c_sub3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
-val c_or3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
-val c_and3 : crds:int -> crs1s:int -> crs2bs:int -> Types.I.t
+val c_mv : Types.I.t
+val c_add : Types.I.t
+val c_fsd : Types.I.t
+val c_sw : Types.I.t
+val c_fsw : Types.I.t
+val c_addi4spn : Types.I.t
+val c_fld : Types.I.t
+val c_lw : Types.I.t
+val c_flw : Types.I.t
+val c_slli : Types.I.t
+val c_fsdsp : Types.I.t
+val c_swsp : Types.I.t
+val c_fswsp : Types.I.t
+val c_addw : Types.I.t
+val c_fldsp : Types.I.t
+val c_lwsp : Types.I.t
+val c_flwsp : Types.I.t
+val c_j : Types.I.t
+val c_jal : Types.I.t
+val c_beqz : Types.I.t
+val c_bnez : Types.I.t
+val c_li : Types.I.t
+val c_lui : Types.I.t
+val c_addi : Types.I.t
+val c_addiw : Types.I.t
 
 end
 

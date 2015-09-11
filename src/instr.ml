@@ -640,7 +640,7 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) +: i_imm i);
         incr_pc()
       end
-      | `slli -> begin
+      | `slliw -> begin
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) <<: (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
@@ -656,11 +656,11 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) ^: i_imm i);
         incr_pc()
       end
-      | `srli -> begin
+      | `srliw -> begin
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) >>: (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
-      | `srai -> begin
+      | `sraiw -> begin
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) >>+ (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
@@ -761,6 +761,19 @@ module Make(T : T) = struct
       | `fence_i -> begin 
         raise RISCV_instruction_not_yet_implemented
       end
+      | `scall -> begin
+        incr_pc(); (* XXX I think... *)
+        raise RISCV_system_call
+      end
+      | `sbreak -> begin
+        raise RISCV_breakpoint (* what about PC? *)
+      end
+      | `_rdcycle
+      | `_rdtime
+      | `_rdinstret
+      | `_rdcycleh
+      | `_rdtimeh
+      | `_rdinstreth -> raise RISCV_instruction_not_yet_implemented
       | _ -> raise RISCV_illegal_instruction
 
   end
@@ -1013,15 +1026,8 @@ module Make(T : T) = struct
   module RVSYS = struct
 
     let exec riscv i opcode = 
-      let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in
+      (*let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in*)
       match opcode with
-      | `scall -> begin
-        incr_pc(); (* XXX I think... *)
-        raise RISCV_system_call
-      end
-      | `sbreak -> begin
-        raise RISCV_breakpoint (* what about PC? *)
-      end
       | `sret -> begin
         let sr = riscv.priv.status in
         let sr = D.(if (sr &: SR.ps) <> zero then sr |: SR.s else sr &: (~: SR.s)) in
@@ -1056,25 +1062,6 @@ module Make(T : T) = struct
 
   end
 
-  module RV32G = struct
-    let exec riscv i opcode = 
-      let rec f = function
-        | [] -> raise RISCV_illegal_instruction
-        | h::t -> begin
-          try h riscv i opcode 
-          with RISCV_illegal_instruction -> f t
-        end
-      in
-      f [
-        RV32I.exec;
-        RV32M.exec;
-        RV32A.exec;
-        RV32F.exec;
-        RV32D.exec;
-        RVSYS.exec;
-      ]
-  end
-
   module RV64I = struct
     let exec riscv i opcode = 
       let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in
@@ -1098,17 +1085,17 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- sextd 31 D.(riscv.regs.(rs1 i) +: i_imm i);
         incr_pc()
       end
-      | `slliw -> begin
+      | `slli -> begin
         riscv.regs.(rd i) <- sextd 31 
           D.(riscv.regs.(rs1 i) <<: (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
-      | `srliw -> begin
+      | `srli -> begin
         riscv.regs.(rd i) <- sextd 31 
           D.(riscv.regs.(rs1 i) >>: (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
-      | `sraiw -> begin
+      | `srai -> begin
         riscv.regs.(rd i) <- sextd 31 
           D.(riscv.regs.(rs1 i) >>+ (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
@@ -1239,6 +1226,25 @@ module Make(T : T) = struct
         raise RISCV_instruction_not_yet_implemented
       end
       | _ -> raise RISCV_illegal_instruction
+  end
+
+  module RV32G = struct
+    let exec riscv i opcode = 
+      let rec f = function
+        | [] -> raise RISCV_illegal_instruction
+        | h::t -> begin
+          try h riscv i opcode 
+          with RISCV_illegal_instruction -> f t
+        end
+      in
+      f [
+        RV32I.exec;
+        RV32M.exec;
+        RV32A.exec;
+        RV32F.exec;
+        RV32D.exec;
+        RVSYS.exec;
+      ]
   end
 
   module RV64G = struct

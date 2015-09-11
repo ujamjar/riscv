@@ -6,13 +6,18 @@ module R = Instr.Make(T)
 module M = Mem.Make(T)
 module E = Load_elf.Make(T)
 
+(*module RRV = R.RV64I
+module RV = RV64I*)
+module RRV = R.RV64G
+module RV = RV64G
+
 let init ~mem_size_mb ~elf_file ~pc = 
   let riscv = T.riscv_init mem_size_mb in
   let _ = E.to_mem elf_file riscv.T.mem in
   riscv.T.pc <- D.of_int pc;
   riscv
 
-let decode = Instr.Util.instruction_decoder RV64G.T.mask_match 
+let decode = Instr.Util.instruction_decoder RV.T.mask_match 
 
 let instr riscv = 
   Int64.to_int32 (M.load 2 riscv.T.mem (D.to_int riscv.T.pc)) 
@@ -21,14 +26,14 @@ let step riscv =
   (* load instruction *)
   let i = instr riscv in
   (* execute instruction *)
-  let () = R.RV64G.exec riscv i (decode i) in
+  let () = RRV.exec riscv i (decode i) in
   (* force r0 to zero *)
   let () = riscv.T.regs.(0) <- D.zero in
   ()
 
 let pstep riscv = 
   let open Printf in
-  let () = printf "%s\n%!" (RV64G.T.pretty (instr riscv)) in
+  let () = printf "%s\n%!" (RV.T.pretty (instr riscv)) in
   let () = step riscv in
   let () = printf "PC=%Li\n%!" riscv.T.pc  in
   let () = 

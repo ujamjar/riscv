@@ -1,9 +1,12 @@
 module T : sig
 
 type t = [
-| `scall
-| `sbreak
 | `sret
+| `sfence_vm
+| `wfi
+| `mrth
+| `mrts
+| `hrts
 | `csrrw
 | `csrrs
 | `csrrc
@@ -24,9 +27,12 @@ end
 
 module Asm_raw : sig
 
-val scall : Types.I.t
-val sbreak : Types.I.t
 val sret : Types.I.t
+val sfence_vm : rs1:int -> Types.I.t
+val wfi : Types.I.t
+val mrth : Types.I.t
+val mrts : Types.I.t
+val hrts : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrs : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrc : rd:int -> rs1:int -> imm12:int -> Types.I.t
@@ -38,9 +44,12 @@ end
 
 module Asm : sig
 
-val scall : Types.I.t
-val sbreak : Types.I.t
 val sret : Types.I.t
+val sfence_vm : rs1:int -> Types.I.t
+val wfi : Types.I.t
+val mrth : Types.I.t
+val mrts : Types.I.t
+val hrts : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrs : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrc : rd:int -> rs1:int -> imm:int -> Types.I.t
