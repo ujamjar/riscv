@@ -6,10 +6,10 @@ module R = Instr.Make(T)
 module M = Mem.Make(T)
 module E = Load_elf.Make(T)
 
-(*module RRV = R.RV64I
-module RV = RV64I*)
-module RRV = R.RV64G
-module RV = RV64G
+module RRV = R.RV64I
+module RV = RV64I
+(*module RRV = R.RV64G
+module RV = RV64G*)
 
 let init ~mem_size_mb ~elf_file ~pc = 
   let riscv = T.riscv_init mem_size_mb in
