@@ -27,9 +27,9 @@ type t = [
 | `sra
 | `or_
 | `and_
-| `slli32
-| `srli32
-| `srai32
+| `slli
+| `srli
+| `srai
 | `lb
 | `lh
 | `lw
@@ -79,9 +79,9 @@ let mask_match = [
   `sra     , (0xfe00707fl,0x40005033l);
   `or_     , (0xfe00707fl,0x00006033l);
   `and_    , (0xfe00707fl,0x00007033l);
-  `slli32  , (0xfe00707fl,0x00001013l);
-  `srli32  , (0xfe00707fl,0x00005013l);
-  `srai32  , (0xfe00707fl,0x40005013l);
+  `slli    , (0xfe00707fl,0x00001013l);
+  `srli    , (0xfe00707fl,0x00005013l);
+  `srai    , (0xfe00707fl,0x40005013l);
   `lb      , (0x0000707fl,0x00000003l);
   `lh      , (0x0000707fl,0x00001003l);
   `lw      , (0x0000707fl,0x00002003l);
@@ -167,12 +167,12 @@ let pretty i =
     ("or" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " rs2=" ^ (x 24 20))
   | `and_     ->
     ("and" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " rs2=" ^ (x 24 20))
-  | `slli32   ->
-    ("slli32" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " shamtw=" ^ (x 24 20))
-  | `srli32   ->
-    ("srli32" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " shamtw=" ^ (x 24 20))
-  | `srai32   ->
-    ("srai32" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " shamtw=" ^ (x 24 20))
+  | `slli     ->
+    ("slli" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " shamtw=" ^ (x 24 20))
+  | `srli     ->
+    ("srli" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " shamtw=" ^ (x 24 20))
+  | `srai     ->
+    ("srai" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " shamtw=" ^ (x 24 20))
   | `lb       ->
     ("lb" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " imm12=" ^ (x 31 20))
   | `lh       ->
@@ -238,9 +238,9 @@ let fields =
     (`sra, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(32)); Range((14,12),Int(5)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
     (`or_, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(6)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
     (`and_, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Range((31,25),Int(0)); Range((14,12),Int(7)); Range((6,2),Int(12)); Range((1,0),Int(3)); ]);
-    (`slli32, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(0)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
-    (`srli32, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(0)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
-    (`srai32, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(32)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`slli, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(0)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`srli, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(0)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
+    (`srai, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Range((31,25),Int(32)); Field((`shamtw,"shamtw",(24,20)), Nothing); Range((14,12),Int(5)); Range((6,2),Int(4)); Range((1,0),Int(3)); ]);
     (`lb, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(0)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
     (`lh, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
     (`lw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
@@ -424,19 +424,19 @@ let and_ ~rd ~rs1 ~rs2 = Types.I.(
   (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x7033l)
 
-let slli32 ~rd ~rs1 ~shamtw = Types.I.(
+let slli ~rd ~rs1 ~shamtw = Types.I.(
   (sll ((of_int rd) &: 0x1fl) 7) |:
   (sll ((of_int rs1) &: 0x1fl) 15) |:
   (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x1013l)
 
-let srli32 ~rd ~rs1 ~shamtw = Types.I.(
+let srli ~rd ~rs1 ~shamtw = Types.I.(
   (sll ((of_int rd) &: 0x1fl) 7) |:
   (sll ((of_int rs1) &: 0x1fl) 15) |:
   (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x5013l)
 
-let srai32 ~rd ~rs1 ~shamtw = Types.I.(
+let srai ~rd ~rs1 ~shamtw = Types.I.(
   (sll ((of_int rd) &: 0x1fl) 7) |:
   (sll ((of_int rs1) &: 0x1fl) 15) |:
   (sll ((of_int shamtw) &: 0x1fl) 20) |:
@@ -561,9 +561,9 @@ let srl = Asm_raw.srl
 let sra = Asm_raw.sra
 let or_ = Asm_raw.or_
 let and_ = Asm_raw.and_
-let slli32 ~rd ~rs1 ~imm = Imm.shw_imm (Asm_raw.slli32 ~rd ~rs1 ) ~imm
-let srli32 ~rd ~rs1 ~imm = Imm.shw_imm (Asm_raw.srli32 ~rd ~rs1 ) ~imm
-let srai32 ~rd ~rs1 ~imm = Imm.shw_imm (Asm_raw.srai32 ~rd ~rs1 ) ~imm
+let slli ~rd ~rs1 ~imm = Imm.shw_imm (Asm_raw.slli ~rd ~rs1 ) ~imm
+let srli ~rd ~rs1 ~imm = Imm.shw_imm (Asm_raw.srli ~rd ~rs1 ) ~imm
+let srai ~rd ~rs1 ~imm = Imm.shw_imm (Asm_raw.srai ~rd ~rs1 ) ~imm
 let lb ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lb ~rd ~rs1 ) ~imm
 let lh ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lh ~rd ~rs1 ) ~imm
 let lw ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lw ~rd ~rs1 ) ~imm
@@ -691,18 +691,18 @@ let suite f n = [
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
     (fun (rd, rs1, rs2) -> f `and_ (Asm_raw.and_ ~rd ~rs1 ~rs2)));
-  QCheck.( mk_test ~name:"slli32" ~n 
+  QCheck.( mk_test ~name:"slli" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, shamtw) -> f `slli32 (Asm_raw.slli32 ~rd ~rs1 ~shamtw)));
-  QCheck.( mk_test ~name:"srli32" ~n 
+    (fun (rd, rs1, shamtw) -> f `slli (Asm_raw.slli ~rd ~rs1 ~shamtw)));
+  QCheck.( mk_test ~name:"srli" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, shamtw) -> f `srli32 (Asm_raw.srli32 ~rd ~rs1 ~shamtw)));
-  QCheck.( mk_test ~name:"srai32" ~n 
+    (fun (rd, rs1, shamtw) -> f `srli (Asm_raw.srli ~rd ~rs1 ~shamtw)));
+  QCheck.( mk_test ~name:"srai" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 32)) 
-    (fun (rd, rs1, shamtw) -> f `srai32 (Asm_raw.srai32 ~rd ~rs1 ~shamtw)));
+    (fun (rd, rs1, shamtw) -> f `srai (Asm_raw.srai ~rd ~rs1 ~shamtw)));
   QCheck.( mk_test ~name:"lb" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 

@@ -145,7 +145,7 @@ module Make(T : T) = struct
   let mask_dlbits = D.mask D.lbits
   let four = D.(sll one 2)
 
-  module RV32I = struct
+  module RVXXI = struct
 
     let exec riscv i opcode = 
       let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in
@@ -201,7 +201,7 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) +: i_imm i);
         incr_pc()
       end
-      | `slli32 -> begin
+      | `slli -> begin
         riscv.regs.(rd i) <- D.(sll riscv.regs.(rs1 i) (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
@@ -217,11 +217,11 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) ^: i_imm i);
         incr_pc()
       end
-      | `srli32 -> begin
+      | `srli -> begin
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) >>: (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
-      | `srai32 -> begin
+      | `srai -> begin
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) >>+ (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
@@ -331,11 +331,22 @@ module Make(T : T) = struct
       end
       | `_rdcycle
       | `_rdtime
-      | `_rdinstret
-      | `_rdcycleh
-      | `_rdtimeh
-      | `_rdinstreth -> raise RISCV_instruction_not_yet_implemented
+      | `_rdinstret -> raise RISCV_instruction_not_yet_implemented
       | _ -> raise RISCV_illegal_instruction
+
+  end
+
+  module RV32I = struct
+
+    let exec riscv i opcode = 
+      (*let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in*)
+      try RVXXI.exec riscv i opcode 
+      with RISCV_illegal_instruction -> 
+        match opcode with
+        | `_rdcycleh
+        | `_rdtimeh
+        | `_rdinstreth -> raise RISCV_instruction_not_yet_implemented
+        | _ -> raise RISCV_illegal_instruction
 
   end
 
@@ -626,6 +637,7 @@ module Make(T : T) = struct
   module RV64I = struct
     let exec riscv i opcode = 
       let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in
+      let mask_dlbits_1 = D.(mask_dlbits >>: 1) in
       match opcode with
       | `lwu -> begin
         let addr = D.(to_int (riscv.regs.(rs1 i) +: i_imm i)) in
@@ -648,20 +660,19 @@ module Make(T : T) = struct
       end
       | `slliw -> begin
         riscv.regs.(rd i) <- sextd 31 
-          D.(sll riscv.regs.(rs1 i) (to_int (i_imm i &: mask_dlbits)));
+          D.(sll riscv.regs.(rs1 i) (to_int (i_imm i &: mask_dlbits_1)));
         incr_pc()
       end
       | `srliw -> begin
         riscv.regs.(rd i) <- sextd 31 
-          D.(riscv.regs.(rs1 i) >>: (to_int (i_imm i &: mask_dlbits)));
+          D.(riscv.regs.(rs1 i) >>: (to_int (i_imm i &: mask_dlbits_1)));
         incr_pc()
       end
       | `sraiw -> begin
         riscv.regs.(rd i) <- sextd 31 
-          D.(riscv.regs.(rs1 i) >>+ (to_int (i_imm i &: mask_dlbits)));
+          D.(riscv.regs.(rs1 i) >>+ (to_int (i_imm i &: mask_dlbits_1)));
         incr_pc()
       end
-      (* slli64, srli64, srai64 ...XXX??? *)
       | `addw -> begin
         riscv.regs.(rd i) <- sextd 31 D.(riscv.regs.(rs1 i) +: riscv.regs.(rs2 i));
         incr_pc()
@@ -672,20 +683,25 @@ module Make(T : T) = struct
       end
       | `sllw -> begin
         riscv.regs.(rd i) <- sextd 31 
-          D.(sll riscv.regs.(rs1 i) (to_int (riscv.regs.(rs2 i) &: mask_dlbits)));
+          D.(sll riscv.regs.(rs1 i) (to_int (riscv.regs.(rs2 i) &: mask_dlbits_1)));
         incr_pc()
       end
       | `srlw -> begin
         riscv.regs.(rd i) <- sextd 31 
-          D.(riscv.regs.(rs1 i) >>: (to_int (riscv.regs.(rs2 i) &: mask_dlbits)));
+          D.(riscv.regs.(rs1 i) >>: (to_int (riscv.regs.(rs2 i) &: mask_dlbits_1)));
         incr_pc()
       end
       | `sraw -> begin
         riscv.regs.(rd i) <- sextd 31 
-          D.(riscv.regs.(rs1 i) >>+ (to_int (riscv.regs.(rs2 i) &: mask_dlbits)));
+          D.(riscv.regs.(rs1 i) >>+ (to_int (riscv.regs.(rs2 i) &: mask_dlbits_1)));
         incr_pc()
       end
       | _ -> raise RISCV_illegal_instruction
+
+    let exec riscv i opcode = 
+      try RVXXI.exec riscv i opcode 
+      with RISCV_illegal_instruction -> exec riscv i opcode
+
   end
 
   module RV64M = struct
@@ -819,12 +835,16 @@ module Make(T : T) = struct
         end
       in
       f [
-        RV32G.exec;
         RV64I.exec;
         RV64M.exec;
         RV64A.exec;
         RV64F.exec;
         RV64D.exec;
+        RV32M.exec;
+        RV32A.exec;
+        RV32F.exec;
+        RV32D.exec;
+        RVSYS.exec;
       ]
   end
 
