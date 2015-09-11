@@ -5,7 +5,9 @@ type t = [
 | `fcvt_lu_s
 | `fcvt_s_l
 | `fcvt_s_lu
-]
+] deriving(Enum,Bounded,Show)
+
+val name : string
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
 

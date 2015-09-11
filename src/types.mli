@@ -18,7 +18,7 @@ module type I = sig
   val (|:) : t -> t -> t
   val (^:) : t -> t -> t
   val (~:) : t -> t
-  val (<<:) : t -> int -> t
+  val sll : t -> int -> t
   val (>>:) : t -> int -> t
   val (>>+) : t -> int -> t
   val (<:) : t -> t -> t

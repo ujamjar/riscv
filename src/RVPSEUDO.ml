@@ -18,7 +18,9 @@ type t = [
 | `_rdcycleh
 | `_rdtimeh
 | `_rdinstreth
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rvpseudo"
 
 let mask_match = [
   `_slli_rv32, (0xfe00707fl,0x00001013l);
@@ -114,82 +116,82 @@ end
 module Asm_raw = struct
 
 let _slli_rv32 ~rd ~rs1 ~shamtw = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamtw) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x1013l)
 
 let _srli_rv32 ~rd ~rs1 ~shamtw = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamtw) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x5013l)
 
 let _srai_rv32 ~rd ~rs1 ~shamtw = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamtw) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x40005013l)
 
 let _frflags ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0x102073l)
 
 let _fsflags ~rd ~rs1 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
   0x101073l)
 
 let _fsflagsi ~rd ~zimm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int zimm) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int zimm) &: 0x1fl) 15) |:
   0x105073l)
 
 let _frrm ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0x202073l)
 
 let _fsrm ~rd ~rs1 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
   0x201073l)
 
 let _fsrmi ~rd ~zimm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int zimm) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int zimm) &: 0x1fl) 15) |:
   0x205073l)
 
 let _fscsr ~rd ~rs1 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
   0x301073l)
 
 let _frcsr ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0x302073l)
 
 let _rdcycle ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc0002073l)
 
 let _rdtime ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc0102073l)
 
 let _rdinstret ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc0202073l)
 
 let _rdcycleh ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc8002073l)
 
 let _rdtimeh ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc8102073l)
 
 let _rdinstreth ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc8202073l)
 
 end

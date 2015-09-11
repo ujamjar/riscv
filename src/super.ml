@@ -359,7 +359,7 @@ module Make(D : Types.D) = struct
     let ea    = 8,1
     let im    = 16,8
     let ip    = 24,8
-    let set (o,b) v = D.( (v &: mask b) <<: o )
+    let set (o,b) v = D.( sll (v &: mask b) o )
     let get (o,b) r = D.( (r >>: o) &: mask b )
   end
 

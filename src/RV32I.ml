@@ -48,7 +48,9 @@ type t = [
 | `_rdcycleh
 | `_rdtimeh
 | `_rdinstreth
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rv32i"
 
 let mask_match = [
   `beq     , (0x0000707fl,0x00000063l);
@@ -264,236 +266,236 @@ end
 module Asm_raw = struct
 
 let beq ~bimm12hi ~rs1 ~rs2 ~bimm12lo = Types.I.(
-  (((of_int bimm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int bimm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int bimm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int bimm12lo) &: 0x1fl) 7) |:
   0x63l)
 
 let bne ~bimm12hi ~rs1 ~rs2 ~bimm12lo = Types.I.(
-  (((of_int bimm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int bimm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int bimm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int bimm12lo) &: 0x1fl) 7) |:
   0x1063l)
 
 let blt ~bimm12hi ~rs1 ~rs2 ~bimm12lo = Types.I.(
-  (((of_int bimm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int bimm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int bimm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int bimm12lo) &: 0x1fl) 7) |:
   0x4063l)
 
 let bge ~bimm12hi ~rs1 ~rs2 ~bimm12lo = Types.I.(
-  (((of_int bimm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int bimm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int bimm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int bimm12lo) &: 0x1fl) 7) |:
   0x5063l)
 
 let bltu ~bimm12hi ~rs1 ~rs2 ~bimm12lo = Types.I.(
-  (((of_int bimm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int bimm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int bimm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int bimm12lo) &: 0x1fl) 7) |:
   0x6063l)
 
 let bgeu ~bimm12hi ~rs1 ~rs2 ~bimm12lo = Types.I.(
-  (((of_int bimm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int bimm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int bimm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int bimm12lo) &: 0x1fl) 7) |:
   0x7063l)
 
 let jalr ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x67l)
 
 let jal ~rd ~jimm20 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int jimm20) &: 0xfffffl) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int jimm20) &: 0xfffffl) 12) |:
   0x6fl)
 
 let lui ~rd ~imm20 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int imm20) &: 0xfffffl) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int imm20) &: 0xfffffl) 12) |:
   0x37l)
 
 let auipc ~rd ~imm20 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int imm20) &: 0xfffffl) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int imm20) &: 0xfffffl) 12) |:
   0x17l)
 
 let addi ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x13l)
 
 let slti ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x2013l)
 
 let sltiu ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x3013l)
 
 let xori ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x4013l)
 
 let ori ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x6013l)
 
 let andi ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x7013l)
 
 let add ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x33l)
 
 let sub ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x40000033l)
 
 let sll ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x1033l)
 
 let slt ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x2033l)
 
 let sltu ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x3033l)
 
 let xor_ ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x4033l)
 
 let srl ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x5033l)
 
 let sra ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x40005033l)
 
 let or_ ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x6033l)
 
 let and_ ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x7033l)
 
 let slliw ~rd ~rs1 ~shamtw = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamtw) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x101bl)
 
 let srliw ~rd ~rs1 ~shamtw = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamtw) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x501bl)
 
 let sraiw ~rd ~rs1 ~shamtw = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamtw) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamtw) &: 0x1fl) 20) |:
   0x4000501bl)
 
 let lb ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x3l)
 
 let lh ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x1003l)
 
 let lw ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x2003l)
 
 let lbu ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x4003l)
 
 let lhu ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x5003l)
 
 let sb ~imm12hi ~rs1 ~rs2 ~imm12lo = Types.I.(
-  (((of_int imm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int imm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int imm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int imm12lo) &: 0x1fl) 7) |:
   0x23l)
 
 let sh ~imm12hi ~rs1 ~rs2 ~imm12lo = Types.I.(
-  (((of_int imm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int imm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int imm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int imm12lo) &: 0x1fl) 7) |:
   0x1023l)
 
 let sw ~imm12hi ~rs1 ~rs2 ~imm12lo = Types.I.(
-  (((of_int imm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int imm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int imm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int imm12lo) &: 0x1fl) 7) |:
   0x2023l)
 
 let fence ~pred ~succ = Types.I.(
-  (((of_int pred) &: 0xfl) <<: 24) |:
-  (((of_int succ) &: 0xfl) <<: 20) |:
+  (sll ((of_int pred) &: 0xfl) 24) |:
+  (sll ((of_int succ) &: 0xfl) 20) |:
   0xfl)
 
 let fence_i = Types.I.(
@@ -506,27 +508,27 @@ let sbreak = Types.I.(
   0x100073l)
 
 let _rdcycle ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc0002073l)
 
 let _rdtime ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc0102073l)
 
 let _rdinstret ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc0202073l)
 
 let _rdcycleh ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc8002073l)
 
 let _rdtimeh ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc8102073l)
 
 let _rdinstreth ~rd = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
   0xc8202073l)
 
 end

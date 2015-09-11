@@ -13,7 +13,9 @@ type t = [
 | `sllw
 | `srlw
 | `sraw
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rv64i"
 
 let mask_match = [
   `lwu     , (0x0000707fl,0x00006003l);
@@ -89,76 +91,76 @@ end
 module Asm_raw = struct
 
 let lwu ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x6003l)
 
 let ld ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x3003l)
 
 let sd ~imm12hi ~rs1 ~rs2 ~imm12lo = Types.I.(
-  (((of_int imm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int imm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int imm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int imm12lo) &: 0x1fl) 7) |:
   0x3023l)
 
 let slli ~rd ~rs1 ~shamt = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamt) &: 0x3fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamt) &: 0x3fl) 20) |:
   0x1013l)
 
 let srli ~rd ~rs1 ~shamt = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamt) &: 0x3fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamt) &: 0x3fl) 20) |:
   0x5013l)
 
 let srai ~rd ~rs1 ~shamt = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int shamt) &: 0x3fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int shamt) &: 0x3fl) 20) |:
   0x40005013l)
 
 let addiw ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x1bl)
 
 let addw ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x3bl)
 
 let subw ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x4000003bl)
 
 let sllw ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x103bl)
 
 let srlw ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x503bl)
 
 let sraw ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x4000503bl)
 
 end

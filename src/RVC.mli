@@ -26,7 +26,9 @@ type t = [
 | `c_lui
 | `c_addi
 | `c_addiw
-]
+] deriving(Enum,Bounded,Show)
+
+val name : string
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
 

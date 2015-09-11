@@ -13,7 +13,9 @@ type t = [
 | `csrrwi
 | `csrrsi
 | `csrrci
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rvsys"
 
 let mask_match = [
   `sret    , (0xffffffffl,0x10000073l);
@@ -92,7 +94,7 @@ let sret = Types.I.(
   0x10000073l)
 
 let sfence_vm ~rs1 = Types.I.(
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
   0x10100073l)
 
 let wfi = Types.I.(
@@ -108,39 +110,39 @@ let hrts = Types.I.(
   0x20500073l)
 
 let csrrw ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x1073l)
 
 let csrrs ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x2073l)
 
 let csrrc ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x3073l)
 
 let csrrwi ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x5073l)
 
 let csrrsi ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x6073l)
 
 let csrrci ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x7073l)
 
 end

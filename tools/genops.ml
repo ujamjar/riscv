@@ -30,7 +30,7 @@ let write_instrs_type f instrs =
   (* type *)
   fprintf f "type t = [\n";
   List.iter (fun (n,_) -> fprintf f "| `%s\n" (Opcodes.map_name n)) instrs;
-  fprintf f "]\n\n"
+  fprintf f "] deriving(Enum,Bounded,Show)\n\n"
 
 let write_mask f instrs = 
   fprintf f "let mask_match = [\n";
@@ -104,6 +104,7 @@ let write_module m =
 
   fprintf mli "module T : sig\n\n";
   write_instrs_type mli instrs;
+  fprintf mli "val name : string\n\n";
   fprintf mli "val mask_match : (t * (Types.I.t * Types.I.t)) list\n\n";
   fprintf mli "val to_t : Types.I.t -> t\n\n";
   fprintf mli "val pretty : Types.I.t -> string\n\n";
@@ -124,6 +125,7 @@ let write_module m =
 
   fprintf ml "module T = struct\n\n";
   write_instrs_type ml instrs;
+  fprintf ml "let name = \"%s\"\n\n" m;
   write_mask ml instrs;
   write_get_opcode ml;
   write_pretty ml instrs;

@@ -13,7 +13,9 @@ type t = [
 | `sllw
 | `srlw
 | `sraw
-]
+] deriving(Enum,Bounded,Show)
+
+val name : string
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
 

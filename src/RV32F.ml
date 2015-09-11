@@ -27,7 +27,9 @@ type t = [
 | `fmsub_s
 | `fnmsub_s
 | `fnmadd_s
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rv32f"
 
 let mask_match = [
   `flw     , (0x0000707fl,0x00002007l);
@@ -159,169 +161,169 @@ end
 module Asm_raw = struct
 
 let flw ~rd ~rs1 ~imm12 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int imm12) &: 0xfffl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
   0x2007l)
 
 let fsw ~imm12hi ~rs1 ~rs2 ~imm12lo = Types.I.(
-  (((of_int imm12hi) &: 0x7fl) <<: 25) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int imm12lo) &: 0x1fl) <<: 7) |:
+  (sll ((of_int imm12hi) &: 0x7fl) 25) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int imm12lo) &: 0x1fl) 7) |:
   0x2027l)
 
 let fadd_s ~rd ~rs1 ~rs2 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x53l)
 
 let fsub_s ~rd ~rs1 ~rs2 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x8000053l)
 
 let fmul_s ~rd ~rs1 ~rs2 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x10000053l)
 
 let fdiv_s ~rd ~rs1 ~rs2 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x18000053l)
 
 let fsgnj_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x20000053l)
 
 let fsgnjn_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x20001053l)
 
 let fsgnjx_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x20002053l)
 
 let fmin_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x28000053l)
 
 let fmax_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0x28001053l)
 
 let fsqrt_s ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x58000053l)
 
 let fle_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0xa0000053l)
 
 let flt_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0xa0001053l)
 
 let feq_s ~rd ~rs1 ~rs2 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
   0xa0002053l)
 
 let fcvt_w_s ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xc0000053l)
 
 let fcvt_wu_s ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xc0100053l)
 
 let fmv_x_s ~rd ~rs1 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
   0xe0000053l)
 
 let fclass_s ~rd ~rs1 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
   0xe0001053l)
 
 let fcvt_s_w ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xd0000053l)
 
 let fcvt_s_wu ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xd0100053l)
 
 let fmv_s_x ~rd ~rs1 = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
   0xf0000053l)
 
 let fmadd_s ~rd ~rs1 ~rs2 ~rs3 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rs3) &: 0x1fl) <<: 27) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rs3) &: 0x1fl) 27) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x43l)
 
 let fmsub_s ~rd ~rs1 ~rs2 ~rs3 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rs3) &: 0x1fl) <<: 27) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rs3) &: 0x1fl) 27) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x47l)
 
 let fnmsub_s ~rd ~rs1 ~rs2 ~rs3 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rs3) &: 0x1fl) <<: 27) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rs3) &: 0x1fl) 27) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x4bl)
 
 let fnmadd_s ~rd ~rs1 ~rs2 ~rs3 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int rs3) &: 0x1fl) <<: 27) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int rs3) &: 0x1fl) 27) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0x4fl)
 
 end

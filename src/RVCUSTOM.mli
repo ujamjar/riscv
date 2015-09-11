@@ -25,7 +25,9 @@ type t = [
 | `_custom3_rd
 | `_custom3_rd_rs1
 | `_custom3_rd_rs1_rs2
-]
+] deriving(Enum,Bounded,Show)
+
+val name : string
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
 

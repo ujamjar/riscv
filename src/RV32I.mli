@@ -48,7 +48,9 @@ type t = [
 | `_rdcycleh
 | `_rdtimeh
 | `_rdinstreth
-]
+] deriving(Enum,Bounded,Show)
+
+val name : string
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
 

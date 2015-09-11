@@ -18,29 +18,6 @@ module Util : sig
   val instruction_decoder_simple : 'a t -> (I.t -> 'a)
 end
 
-(* TO BE DELETED... *)
-module Make_old(T : Cpu.T) : sig
-
-  val i_type : T.riscv -> T.instr -> unit
-  val r_type : T.riscv -> T.instr -> unit
-  val lui : T.riscv -> T.instr -> unit
-  val auipc : T.riscv -> T.instr -> unit
-  val jal : T.riscv -> T.instr -> unit
-  val b_type : T.riscv -> T.instr -> unit
-  val jalr : T.riscv -> T.instr -> unit
-  val loads : T.riscv -> T.instr -> unit
-  val stores : T.riscv -> T.instr -> unit
-  val fence : T.riscv -> T.instr -> unit
-  val csr : T.riscv -> T.instr -> unit
-  val sys : T.riscv -> T.instr -> unit
-  val int32 : T.riscv -> T.instr -> unit
-  val int32_more : T.riscv -> T.instr -> unit
-  val atomic : T.riscv -> T.instr -> unit
-
-  val execute : T.riscv -> T.instr -> unit
-
-end
-
 module Make(T : Cpu.T) : sig
   module RV32I : sig
     val exec : T.riscv -> Types.I.t -> [> RV32I.T.t ] -> unit

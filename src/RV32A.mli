@@ -12,7 +12,9 @@ type t = [
 | `amoswap_w
 | `lr_w
 | `sc_w
-]
+] deriving(Enum,Bounded,Show)
+
+val name : string
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
 

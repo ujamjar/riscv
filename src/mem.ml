@@ -10,7 +10,7 @@ module Make(T : Cpu.T) = struct
 
   let insert_bits m a d pos size = 
     let mask' = D.mask size in
-    D.A.set m a D.( ((D.A.get m a) &: (~: (mask' <<: pos))) |: ((d &: mask') <<: pos) )
+    D.A.set m a D.( ((D.A.get m a) &: (~: (sll mask' pos))) |: (sll (d &: mask') pos) )
 
   let mask n = (1 lsl n) - 1
 

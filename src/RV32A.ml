@@ -12,7 +12,9 @@ type t = [
 | `amoswap_w
 | `lr_w
 | `sc_w
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rv32a"
 
 let mask_match = [
   `amoadd_w, (0xf800707fl,0x0000202fl);
@@ -84,79 +86,79 @@ end
 module Asm_raw = struct
 
 let amoadd_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x202fl)
 
 let amoxor_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x2000202fl)
 
 let amoor_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x4000202fl)
 
 let amoand_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x6000202fl)
 
 let amomin_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x8000202fl)
 
 let amomax_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0xa000202fl)
 
 let amominu_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0xc000202fl)
 
 let amomaxu_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0xe000202fl)
 
 let amoswap_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x800202fl)
 
 let lr_w ~rd ~rs1 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x1000202fl)
 
 let sc_w ~rd ~rs1 ~rs2 ~aqrl = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rs2) &: 0x1fl) <<: 20) |:
-  (((of_int aqrl) &: 0x3l) <<: 25) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rs2) &: 0x1fl) 20) |:
+  (sll ((of_int aqrl) &: 0x3l) 25) |:
   0x1800202fl)
 
 end

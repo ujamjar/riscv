@@ -26,7 +26,9 @@ type t = [
 | `c_lui
 | `c_addi
 | `c_addiw
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rvc"
 
 let mask_match = [
   `c_mv    , (0x0000f003l,0x00000000l);

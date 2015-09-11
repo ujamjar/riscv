@@ -27,7 +27,9 @@ type t = [
 | `fmsub_d
 | `fnmsub_d
 | `fnmadd_d
-]
+] deriving(Enum,Bounded,Show)
+
+val name : string
 
 val mask_match : (t * (Types.I.t * Types.I.t)) list
 

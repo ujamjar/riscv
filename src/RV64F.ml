@@ -5,7 +5,9 @@ type t = [
 | `fcvt_lu_s
 | `fcvt_s_l
 | `fcvt_s_lu
-]
+] deriving(Enum,Bounded,Show)
+
+let name = "rv64f"
 
 let mask_match = [
   `fcvt_l_s, (0xfff0007fl,0xc0200053l);
@@ -49,27 +51,27 @@ end
 module Asm_raw = struct
 
 let fcvt_l_s ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xc0200053l)
 
 let fcvt_lu_s ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xc0300053l)
 
 let fcvt_s_l ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xd0200053l)
 
 let fcvt_s_lu ~rd ~rs1 ~rm = Types.I.(
-  (((of_int rd) &: 0x1fl) <<: 7) |:
-  (((of_int rs1) &: 0x1fl) <<: 15) |:
-  (((of_int rm) &: 0x7l) <<: 12) |:
+  (sll ((of_int rd) &: 0x1fl) 7) |:
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int rm) &: 0x7l) 12) |:
   0xd0300053l)
 
 end

@@ -212,7 +212,7 @@ let write_asm_raw_ml f instrs =
       match i with
       | Field((_,n,(h,l)),Ignore) 
       | Field((_,n,(h,l)),Nothing) -> 
-          fprintf f "  (((of_int %s) &: 0x%xl) <<: %i) |:\n" n ((1 lsl (h-l+1))-1) l;
+          fprintf f "  (sll ((of_int %s) &: 0x%xl) %i) |:\n" n ((1 lsl (h-l+1))-1) l;
           acc
       | Field((_,_,(_,l)),Int d) -> m d l
 

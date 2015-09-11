@@ -18,7 +18,7 @@ module type I = sig
   val (|:) : t -> t -> t
   val (^:) : t -> t -> t
   val (~:) : t -> t
-  val (<<:) : t -> int -> t
+  val sll : t -> int -> t
   val (>>:) : t -> int -> t
   val (>>+) : t -> int -> t
   val (<:) : t -> t -> t
@@ -54,7 +54,7 @@ module I32 = struct
   let (|:) = Int32.logor
   let (^:) = Int32.logxor
   let (~:) = Int32.lognot
-  let (<<:) = Int32.shift_left
+  let sll = Int32.shift_left
   let (>>:) = Int32.shift_right_logical
   let (>>+) = Int32.shift_right
   let (<+) a b = if Int32.compare a b = (-1) then 1l else 0l
@@ -74,8 +74,8 @@ module I32 = struct
     else if Int32.( (logand a 0x7fff_ffffl) >= (logand b 0x7fff_ffffl) ) then 1l
     else 0l
   let extract_bits ~pos ~size v = 
-    (v >>: pos) &: ((one <<: size) -: one)
-  let mask n = if n=bits then ones else (one <<: n) -: one
+    (v >>: pos) &: ((sll one size) -: one)
+  let mask n = if n=bits then ones else (sll one n) -: one
   module A = struct
     type arr = (int32, Bigarray.int32_elt, Bigarray.c_layout) Bigarray.Array1.t
     let create len init = 
@@ -109,7 +109,7 @@ module I64 = struct
   let (|:) = Int64.logor
   let (^:) = Int64.logxor
   let (~:) = Int64.lognot
-  let (<<:) = Int64.shift_left
+  let sll = Int64.shift_left
   let (>>:) = Int64.shift_right_logical
   let (>>+) = Int64.shift_right
   let (<+) a b = if Int64.compare a b = (-1) then 1L else 0L
@@ -129,8 +129,8 @@ module I64 = struct
     else if Int64.( (logand a 0x7fff_ffff_ffff_ffffL) >= (logand b 0x7fff_ffff_ffff_ffffL) ) then 1L
     else 0L
   let extract_bits ~pos ~size v = 
-    (v >>: pos) &: ((one <<: size) -: one)
-  let mask n = if n=bits then ones else (one <<: n) -: one
+    (v >>: pos) &: ((sll one size) -: one)
+  let mask n = if n=bits then ones else (sll one n) -: one
   module A = struct
     type arr = (int64, Bigarray.int64_elt, Bigarray.c_layout) Bigarray.Array1.t
     let create len init = 

@@ -118,17 +118,17 @@ module Make(D : D) = struct
     }
 
   module SR = struct
-    let s   = D.(one <<: 0)
-    let ps  = D.(one <<: 1)
-    let ei  = D.(one <<: 2)
-    let pei = D.(one <<: 3)
-    let ef  = D.(one <<: 4)
-    let u64 = D.(one <<: 5)
-    let s64 = D.(one <<: 6)
-    let vm  = D.(one <<: 7)
-    let ea  = D.(one <<: 8)
-    let im  = D.(mask 8 <<: 16)
-    let ip  = D.(mask 8 <<: 24)
+    let s   = D.(sll one 0)
+    let ps  = D.(sll one 1)
+    let ei  = D.(sll one 2)
+    let pei = D.(sll one 3)
+    let ef  = D.(sll one 4)
+    let u64 = D.(sll one 5)
+    let s64 = D.(sll one 6)
+    let vm  = D.(sll one 7)
+    let ea  = D.(sll one 8)
+    let im  = D.(sll (mask 8) 16)
+    let ip  = D.(sll (mask 8) 24)
     
     (* set status reg value.  u64+s64 on, ef off *)
     let set v = D.(v |: u64 |: s64 &: (~: ef))
