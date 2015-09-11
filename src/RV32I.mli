@@ -27,9 +27,9 @@ type t = [
 | `sra
 | `or_
 | `and_
-| `slliw
-| `srliw
-| `sraiw
+| `slli32
+| `srli32
+| `srai32
 | `lb
 | `lh
 | `lw
@@ -90,9 +90,9 @@ val srl : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val sra : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val or_ : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val and_ : rd:int -> rs1:int -> rs2:int -> Types.I.t
-val slliw : rd:int -> rs1:int -> shamtw:int -> Types.I.t
-val srliw : rd:int -> rs1:int -> shamtw:int -> Types.I.t
-val sraiw : rd:int -> rs1:int -> shamtw:int -> Types.I.t
+val slli32 : rd:int -> rs1:int -> shamtw:int -> Types.I.t
+val srli32 : rd:int -> rs1:int -> shamtw:int -> Types.I.t
+val srai32 : rd:int -> rs1:int -> shamtw:int -> Types.I.t
 val lb : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val lh : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val lw : rd:int -> rs1:int -> imm12:int -> Types.I.t
@@ -142,9 +142,9 @@ val srl : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val sra : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val or_ : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val and_ : rd:int -> rs1:int -> rs2:int -> Types.I.t
-val slliw : rd:int -> rs1:int -> imm:int -> Types.I.t
-val srliw : rd:int -> rs1:int -> imm:int -> Types.I.t
-val sraiw : rd:int -> rs1:int -> imm:int -> Types.I.t
+val slli32 : rd:int -> rs1:int -> imm:int -> Types.I.t
+val srli32 : rd:int -> rs1:int -> imm:int -> Types.I.t
+val srai32 : rd:int -> rs1:int -> imm:int -> Types.I.t
 val lb : rd:int -> rs1:int -> imm:int -> Types.I.t
 val lh : rd:int -> rs1:int -> imm:int -> Types.I.t
 val lw : rd:int -> rs1:int -> imm:int -> Types.I.t

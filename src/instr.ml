@@ -201,7 +201,7 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) +: i_imm i);
         incr_pc()
       end
-      | `slliw -> begin
+      | `slli32 -> begin
         riscv.regs.(rd i) <- D.(sll riscv.regs.(rs1 i) (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
@@ -217,11 +217,11 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) ^: i_imm i);
         incr_pc()
       end
-      | `srliw -> begin
+      | `srli32 -> begin
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) >>: (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
-      | `sraiw -> begin
+      | `srai32 -> begin
         riscv.regs.(rd i) <- D.(riscv.regs.(rs1 i) >>+ (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
@@ -646,21 +646,22 @@ module Make(T : T) = struct
         riscv.regs.(rd i) <- sextd 31 D.(riscv.regs.(rs1 i) +: i_imm i);
         incr_pc()
       end
-      | `slli -> begin
+      | `slliw -> begin
         riscv.regs.(rd i) <- sextd 31 
           D.(sll riscv.regs.(rs1 i) (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
-      | `srli -> begin
+      | `srliw -> begin
         riscv.regs.(rd i) <- sextd 31 
           D.(riscv.regs.(rs1 i) >>: (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
-      | `srai -> begin
+      | `sraiw -> begin
         riscv.regs.(rd i) <- sextd 31 
           D.(riscv.regs.(rs1 i) >>+ (to_int (i_imm i &: mask_dlbits)));
         incr_pc()
       end
+      (* slli64, srli64, srai64 ...XXX??? *)
       | `addw -> begin
         riscv.regs.(rd i) <- sextd 31 D.(riscv.regs.(rs1 i) +: riscv.regs.(rs2 i));
         incr_pc()

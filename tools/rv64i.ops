@@ -3,10 +3,13 @@ lwu     rd rs1       imm12 14..12=6 6..2=0x00 1..0=3
 ld      rd rs1       imm12 14..12=3 6..2=0x00 1..0=3
 sd     imm12hi rs1 rs2 imm12lo 14..12=3 6..2=0x08 1..0=3
 
-# 64 bit versions of the shift-immediate instructions
-slli    rd rs1 31..26=0  shamt 14..12=1 6..2=0x04 1..0=3
-srli    rd rs1 31..26=0  shamt 14..12=5 6..2=0x04 1..0=3
-srai    rd rs1 31..26=16 shamt 14..12=5 6..2=0x04 1..0=3
+slli64  rd rs1 31..26=0  shamt 14..12=1 6..2=0x04 1..0=3
+srli64  rd rs1 31..26=0  shamt 14..12=5 6..2=0x04 1..0=3
+srai64  rd rs1 31..26=16 shamt 14..12=5 6..2=0x04 1..0=3
+
+slliw   rd rs1 31..25=0  shamtw 14..12=1 6..2=0x06 1..0=3
+srliw   rd rs1 31..25=0  shamtw 14..12=5 6..2=0x06 1..0=3
+sraiw   rd rs1 31..25=32 shamtw 14..12=5 6..2=0x06 1..0=3
 
 addiw   rd rs1 imm12            14..12=0 6..2=0x06 1..0=3
 

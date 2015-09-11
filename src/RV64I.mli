@@ -4,9 +4,12 @@ type t = [
 | `lwu
 | `ld
 | `sd
-| `slli
-| `srli
-| `srai
+| `slli64
+| `srli64
+| `srai64
+| `slliw
+| `srliw
+| `sraiw
 | `addiw
 | `addw
 | `subw
@@ -32,9 +35,12 @@ module Asm_raw : sig
 val lwu : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val ld : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val sd : imm12hi:int -> rs1:int -> rs2:int -> imm12lo:int -> Types.I.t
-val slli : rd:int -> rs1:int -> shamt:int -> Types.I.t
-val srli : rd:int -> rs1:int -> shamt:int -> Types.I.t
-val srai : rd:int -> rs1:int -> shamt:int -> Types.I.t
+val slli64 : rd:int -> rs1:int -> shamt:int -> Types.I.t
+val srli64 : rd:int -> rs1:int -> shamt:int -> Types.I.t
+val srai64 : rd:int -> rs1:int -> shamt:int -> Types.I.t
+val slliw : rd:int -> rs1:int -> shamtw:int -> Types.I.t
+val srliw : rd:int -> rs1:int -> shamtw:int -> Types.I.t
+val sraiw : rd:int -> rs1:int -> shamtw:int -> Types.I.t
 val addiw : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val addw : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val subw : rd:int -> rs1:int -> rs2:int -> Types.I.t
@@ -49,9 +55,12 @@ module Asm : sig
 val lwu : rd:int -> rs1:int -> imm:int -> Types.I.t
 val ld : rd:int -> rs1:int -> imm:int -> Types.I.t
 val sd : rs1:int -> rs2:int -> imm:int -> Types.I.t
-val slli : rd:int -> rs1:int -> imm:int -> Types.I.t
-val srli : rd:int -> rs1:int -> imm:int -> Types.I.t
-val srai : rd:int -> rs1:int -> imm:int -> Types.I.t
+val slli64 : rd:int -> rs1:int -> imm:int -> Types.I.t
+val srli64 : rd:int -> rs1:int -> imm:int -> Types.I.t
+val srai64 : rd:int -> rs1:int -> imm:int -> Types.I.t
+val slliw : rd:int -> rs1:int -> imm:int -> Types.I.t
+val srliw : rd:int -> rs1:int -> imm:int -> Types.I.t
+val sraiw : rd:int -> rs1:int -> imm:int -> Types.I.t
 val addiw : rd:int -> rs1:int -> imm:int -> Types.I.t
 val addw : rd:int -> rs1:int -> rs2:int -> Types.I.t
 val subw : rd:int -> rs1:int -> rs2:int -> Types.I.t
