@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: 650a36f8d02a51da2b4b2d530c968701)
+# DO NOT EDIT (digest: 54a0964e071482ddd2611e58a4eaebf1)
 # Ignore VCS directories, you can use the same kind of rule outside
 # OASIS_START/STOP if you want to exclude directories that contains
 # useless stuff for the build process
@@ -34,9 +34,8 @@ true: annot, bin_annot
 "src/RV64I.cmx": for-pack(Riscv)
 "src/RV64M.cmx": for-pack(Riscv)
 "src/RVC.cmx": for-pack(Riscv)
-"src/RVCUSTOM.cmx": for-pack(Riscv)
-"src/RVPSEUDO.cmx": for-pack(Riscv)
-"src/RVSYS.cmx": for-pack(Riscv)
+"src/RVMACHINE.cmx": for-pack(Riscv)
+"src/RVSUPER.cmx": for-pack(Riscv)
 "src/load_elf.cmx": for-pack(Riscv)
 "src/cpu.cmx": for-pack(Riscv)
 "src/instr.cmx": for-pack(Riscv)
@@ -45,4 +44,8 @@ true: annot, bin_annot
 <src/*.ml{,i,y}>: pkg_deriving.syntax
 <src/*.ml{,i,y}>: pkg_elf
 <src/*.ml{,i,y}>: pkg_qcheck
+# Executable genops
+"tools/genops.byte": pkg_re
+<tools/*.ml{,i,y}>: pkg_re
 # OASIS_STOP
+<rv64_tools> or <rv32_tools> or <test/firmware>: -traverse

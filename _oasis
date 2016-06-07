@@ -17,10 +17,18 @@ Library Riscv
   Pack:          true
   Modules:       Types,Mem,Super,QCRV,Imm,
                  RV32A,RV32D,RV32F,RV32G,RV32I,RV32M,RV64A,RV64D,
-                 RV64F,RV64G,RV64I,RV64M,RVC,RVCUSTOM,RVPSEUDO,RVSYS,
+                 RV64F,RV64G,RV64I,RV64M,RVC,RVMACHINE,RVSUPER,
                  Load_elf,Cpu,Instr,Sim
   BuildDepends:  bytes, elf, qcheck, deriving.syntax
   XMETARequires: bytes, elf, qcheck, deriving
+
+Executable genops
+  Path:               tools
+  MainIs:             genops.ml
+  Custom:             false
+  CompiledObject:     byte
+  Install:            false
+  BuildDepends:       re
 
 SourceRepository master
   Type:     git

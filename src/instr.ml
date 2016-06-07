@@ -145,7 +145,7 @@ module Make(T : T) = struct
   let mask_dlbits = D.mask D.lbits
   let four = D.(sll one 2)
 
-  module RVXXI = struct
+  module RV32I = struct
 
     let exec riscv i opcode = 
       let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in
@@ -322,31 +322,15 @@ module Make(T : T) = struct
       | `fence_i -> begin 
         raise RISCV_instruction_not_yet_implemented
       end
-      | `scall -> begin
+      | `ecall -> begin
         incr_pc(); (* XXX I think... *)
         raise RISCV_system_call
       end
-      | `sbreak -> begin
+      | `ebreak -> begin
         raise RISCV_breakpoint (* what about PC? *)
       end
-      | `_rdcycle
-      | `_rdtime
-      | `_rdinstret -> raise RISCV_instruction_not_yet_implemented
+      | `csrrs -> raise RISCV_instruction_not_yet_implemented
       | _ -> raise RISCV_illegal_instruction
-
-  end
-
-  module RV32I = struct
-
-    let exec riscv i opcode = 
-      (*let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in*)
-      try RVXXI.exec riscv i opcode 
-      with RISCV_illegal_instruction -> 
-        match opcode with
-        | `_rdcycleh
-        | `_rdtimeh
-        | `_rdinstreth -> raise RISCV_instruction_not_yet_implemented
-        | _ -> raise RISCV_illegal_instruction
 
   end
 
@@ -595,7 +579,7 @@ module Make(T : T) = struct
 
   end
 
-  module RVSYS = struct
+  (*module RVSYS = struct
 
     let exec riscv i opcode = 
       (*let incr_pc() = riscv.pc <- D.(riscv.pc +: four) in*)
@@ -632,7 +616,7 @@ module Make(T : T) = struct
       end
       | _ -> raise RISCV_illegal_instruction
 
-  end
+  end*)
 
   module RV64I = struct
     let exec riscv i opcode = 
@@ -699,7 +683,7 @@ module Make(T : T) = struct
       | _ -> raise RISCV_illegal_instruction
 
     let exec riscv i opcode = 
-      try RVXXI.exec riscv i opcode 
+      try RV32I.exec riscv i opcode 
       with RISCV_illegal_instruction -> exec riscv i opcode
 
   end
@@ -821,7 +805,7 @@ module Make(T : T) = struct
         RV32A.exec;
         RV32F.exec;
         RV32D.exec;
-        RVSYS.exec;
+        (*RVSYS.exec;*)
       ]
   end
 
@@ -844,7 +828,7 @@ module Make(T : T) = struct
         RV32A.exec;
         RV32F.exec;
         RV32D.exec;
-        RVSYS.exec;
+        (*RVSYS.exec;*)
       ]
   end
 

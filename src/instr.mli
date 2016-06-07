@@ -34,9 +34,9 @@ module Make(T : Cpu.T) : sig
   module RV32D : sig
     val exec : T.riscv -> Types.I.t -> [> RV32D.T.t ] -> unit
   end
-  module RVSYS : sig
+  (*module RVSYS : sig
     val exec : T.riscv -> Types.I.t -> [> RVSYS.T.t ] -> unit
-  end
+  end*)
   module RV64I : sig
     val exec : T.riscv -> Types.I.t -> [> RV64I.T.t ] -> unit
   end

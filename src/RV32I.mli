@@ -40,14 +40,9 @@ type t = [
 | `sw
 | `fence
 | `fence_i
-| `scall
-| `sbreak
-| `_rdcycle
-| `_rdtime
-| `_rdinstret
-| `_rdcycleh
-| `_rdtimeh
-| `_rdinstreth
+| `ecall
+| `ebreak
+| `csrrs
 ] deriving(Enum,Bounded,Show)
 
 val name : string
@@ -103,14 +98,9 @@ val sh : imm12hi:int -> rs1:int -> rs2:int -> imm12lo:int -> Types.I.t
 val sw : imm12hi:int -> rs1:int -> rs2:int -> imm12lo:int -> Types.I.t
 val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
-val scall : Types.I.t
-val sbreak : Types.I.t
-val _rdcycle : rd:int -> Types.I.t
-val _rdtime : rd:int -> Types.I.t
-val _rdinstret : rd:int -> Types.I.t
-val _rdcycleh : rd:int -> Types.I.t
-val _rdtimeh : rd:int -> Types.I.t
-val _rdinstreth : rd:int -> Types.I.t
+val ecall : Types.I.t
+val ebreak : Types.I.t
+val csrrs : rd:int -> rs1:int -> imm12:int -> Types.I.t
 
 end
 
@@ -155,14 +145,9 @@ val sh : rs1:int -> rs2:int -> imm:int -> Types.I.t
 val sw : rs1:int -> rs2:int -> imm:int -> Types.I.t
 val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
-val scall : Types.I.t
-val sbreak : Types.I.t
-val _rdcycle : rd:int -> Types.I.t
-val _rdtime : rd:int -> Types.I.t
-val _rdinstret : rd:int -> Types.I.t
-val _rdcycleh : rd:int -> Types.I.t
-val _rdtimeh : rd:int -> Types.I.t
-val _rdinstreth : rd:int -> Types.I.t
+val ecall : Types.I.t
+val ebreak : Types.I.t
+val csrrs : rd:int -> rs1:int -> imm:int -> Types.I.t
 
 end
 

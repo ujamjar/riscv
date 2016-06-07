@@ -6,7 +6,7 @@ module T = struct
     | RV32A.T.t
     | RV32F.T.t
     | RV32D.T.t
-    | RVSYS.T.t
+    (*| RVSYS.T.t*)
   ]
 
   let mask_match = 
@@ -17,7 +17,7 @@ module T = struct
         (RV32A.T.mask_match :> ((t * (Int32.t * Int32.t))) list);
         (RV32F.T.mask_match :> ((t * (Int32.t * Int32.t))) list);
         (RV32D.T.mask_match :> ((t * (Int32.t * Int32.t))) list);
-        (RVSYS.T.mask_match :> ((t * (Int32.t * Int32.t))) list);
+        (*(RVSYS.T.mask_match :> ((t * (Int32.t * Int32.t))) list);*)
       ]
 
   let to_t i = 
@@ -28,18 +28,13 @@ module T = struct
     f mask_match
 
   let pretty i = 
-    try RV32I.T.pretty i 
-    with Not_found -> 
-    try RV32M.T.pretty i 
-    with Not_found -> 
-    try RV32A.T.pretty i 
-    with Not_found -> 
-    try RV32F.T.pretty i 
-    with Not_found -> 
-    try RV32D.T.pretty i 
-    with Not_found -> 
-    try RVSYS.T.pretty i 
-    with Not_found -> raise Not_found
+    try RV32I.T.pretty i with Not_found -> 
+    try RV32M.T.pretty i with Not_found -> 
+    try RV32A.T.pretty i with Not_found -> 
+    try RV32F.T.pretty i with Not_found -> 
+    try RV32D.T.pretty i with Not_found -> 
+    (*try RVSYS.T.pretty i with Not_found ->*) 
+    raise Not_found
 
   let fields = 
     List.concat 
@@ -49,18 +44,18 @@ module T = struct
         (RV32A.T.fields :> ((t * Types.Fields.t list) list));
         (RV32F.T.fields :> ((t * Types.Fields.t list) list));
         (RV32D.T.fields :> ((t * Types.Fields.t list) list));
-        (RVSYS.T.fields :> ((t * Types.Fields.t list) list));
+        (*(RVSYS.T.fields :> ((t * Types.Fields.t list) list));*)
       ]
 
 end
 
-module Asm_raw = struct
-  include RV32I.Asm_raw
-  include RV32M.Asm_raw
-  include RV32A.Asm_raw
-  include RV32F.Asm_raw
-  include RV32D.Asm_raw
-  include RVSYS.Asm_raw
+module Asm = struct
+  include RV32I.Asm
+  include RV32M.Asm
+  include RV32A.Asm
+  include RV32F.Asm
+  include RV32D.Asm
+  (*include RVSYS.Asm*)
 end
 
 module Test = struct
@@ -71,7 +66,7 @@ module Test = struct
       (RV32A.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
       (RV32F.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
       (RV32D.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
-      (RVSYS.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));
+      (*(RVSYS.Test.suite :> ((T.t -> Types.I.t -> bool) -> int -> QCheck.suite));*)
     ] in
     List.concat (List.map (fun suite -> suite f n) suites)
 end

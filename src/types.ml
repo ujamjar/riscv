@@ -33,6 +33,8 @@ module type I = sig
     val get : arr -> int -> t
     val set : arr -> int -> t -> unit
   end
+  val to_string : t -> string
+  val to_hex : t -> string
 end
 
 module I32 = struct
@@ -88,6 +90,8 @@ module I32 = struct
     let get arr n = arr.{n}
     let set arr n v = arr.{n} <- v
   end
+  let to_string = Printf.sprintf "%li"
+  let to_hex = Printf.sprintf "%.8lx"
 end
 
 module I64 = struct
@@ -143,6 +147,8 @@ module I64 = struct
     let get arr n = arr.{n}
     let set arr n v = arr.{n} <- v
   end
+  let to_string = Printf.sprintf "%Li"
+  let to_hex = Printf.sprintf "%.16Lx"
 end
 
 module I = I32
@@ -150,6 +156,7 @@ module I = I32
 module type D = sig
   include I
   val of_i : I.t -> t
+  val to_i : t -> I.t 
 end
 
 module Fields = struct
@@ -230,11 +237,13 @@ end
 module D64 = struct
   include I64
   let of_i = Int64.of_int32
+  let to_i = Int64.to_int32
 end
 
 module D32 = struct
   include I32
   let of_i x = x
+  let to_i x = x
 end
 
 let abi_name_of_reg r = 

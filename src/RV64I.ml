@@ -40,11 +40,9 @@ type t = [
 | `sw
 | `fence
 | `fence_i
-| `scall
-| `sbreak
-| `_rdcycle
-| `_rdtime
-| `_rdinstret
+| `ecall
+| `ebreak
+| `csrrs
 | `lwu
 | `ld
 | `sd
@@ -101,11 +99,9 @@ let mask_match = [
   `sw      , (0x0000707fl,0x00002023l);
   `fence   , (0x0000707fl,0x0000000fl);
   `fence_i , (0x0000707fl,0x0000100fl);
-  `scall   , (0xffffffffl,0x00000073l);
-  `sbreak  , (0xffffffffl,0x00100073l);
-  `_rdcycle, (0xfffff07fl,0xc0002073l);
-  `_rdtime , (0xfffff07fl,0xc0102073l);
-  `_rdinstret, (0xfffff07fl,0xc0202073l);
+  `ecall   , (0xffffffffl,0x00000073l);
+  `ebreak  , (0xffffffffl,0x00100073l);
+  `csrrs   , (0x0000707fl,0x00002073l);
   `lwu     , (0x0000707fl,0x00006003l);
   `ld      , (0x0000707fl,0x00003003l);
   `sd      , (0x0000707fl,0x00003023l);
@@ -211,16 +207,12 @@ let pretty i =
     ("fence" ^ " pred=" ^ (x 27 24) ^ " succ=" ^ (x 23 20))
   | `fence_i  ->
     ("fence.i")
-  | `scall    ->
-    ("scall")
-  | `sbreak   ->
-    ("sbreak")
-  | `_rdcycle ->
-    ("@rdcycle" ^ " rd=" ^ (x 11 7))
-  | `_rdtime  ->
-    ("@rdtime" ^ " rd=" ^ (x 11 7))
-  | `_rdinstret ->
-    ("@rdinstret" ^ " rd=" ^ (x 11 7))
+  | `ecall    ->
+    ("ecall")
+  | `ebreak   ->
+    ("ebreak")
+  | `csrrs    ->
+    ("csrrs" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " imm12=" ^ (x 31 20))
   | `lwu      ->
     ("lwu" ^ " rd=" ^ (x 11 7) ^ " rs1=" ^ (x 19 15) ^ " imm12=" ^ (x 31 20))
   | `ld       ->
@@ -287,11 +279,9 @@ let fields =
     (`sw, [ Field((`imm12hi,"imm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`imm12lo,"imm12lo",(11,7)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(8)); Range((1,0),Int(3)); ]);
     (`fence, [ Range((31,28),Ignore); Field((`pred,"pred",(27,24)), Nothing); Field((`succ,"succ",(23,20)), Nothing); Range((19,15),Ignore); Range((14,12),Int(0)); Range((11,7),Ignore); Range((6,2),Int(3)); Range((1,0),Int(3)); ]);
     (`fence_i, [ Range((31,28),Ignore); Range((27,20),Ignore); Range((19,15),Ignore); Range((14,12),Int(1)); Range((11,7),Ignore); Range((6,2),Int(3)); Range((1,0),Int(3)); ]);
-    (`scall, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(0)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
-    (`sbreak, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(1)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
-    (`_rdcycle, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3072)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
-    (`_rdtime, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3073)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
-    (`_rdinstret, [ Field((`rd,"rd",(11,7)), Nothing); Range((19,15),Int(0)); Range((31,20),Int(3074)); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`ecall, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(0)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`ebreak, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(1)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`csrrs, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
     (`lwu, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(6)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
     (`ld, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(0)); Range((1,0),Int(3)); ]);
     (`sd, [ Field((`imm12hi,"imm12hi",(31,25)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`rs2,"rs2",(24,20)), Nothing); Field((`imm12lo,"imm12lo",(11,7)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(8)); Range((1,0),Int(3)); ]);
@@ -546,23 +536,17 @@ let fence ~pred ~succ = Types.I.(
 let fence_i = Types.I.(
   0x100fl)
 
-let scall = Types.I.(
+let ecall = Types.I.(
   0x73l)
 
-let sbreak = Types.I.(
+let ebreak = Types.I.(
   0x100073l)
 
-let _rdcycle ~rd = Types.I.(
+let csrrs ~rd ~rs1 ~imm12 = Types.I.(
   (sll ((of_int rd) &: 0x1fl) 7) |:
-  0xc0002073l)
-
-let _rdtime ~rd = Types.I.(
-  (sll ((of_int rd) &: 0x1fl) 7) |:
-  0xc0102073l)
-
-let _rdinstret ~rd = Types.I.(
-  (sll ((of_int rd) &: 0x1fl) 7) |:
-  0xc0202073l)
+  (sll ((of_int rs1) &: 0x1fl) 15) |:
+  (sll ((of_int imm12) &: 0xfffl) 20) |:
+  0x2073l)
 
 let lwu ~rd ~rs1 ~imm12 = Types.I.(
   (sll ((of_int rd) &: 0x1fl) 7) |:
@@ -680,11 +664,9 @@ let sh ~rs1 ~rs2 ~imm = Imm.s_imm (Asm_raw.sh ~rs1 ~rs2 ) ~imm
 let sw ~rs1 ~rs2 ~imm = Imm.s_imm (Asm_raw.sw ~rs1 ~rs2 ) ~imm
 let fence = Asm_raw.fence
 let fence_i = Asm_raw.fence_i
-let scall = Asm_raw.scall
-let sbreak = Asm_raw.sbreak
-let _rdcycle = Asm_raw._rdcycle
-let _rdtime = Asm_raw._rdtime
-let _rdinstret = Asm_raw._rdinstret
+let ecall = Asm_raw.ecall
+let ebreak = Asm_raw.ebreak
+let csrrs ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrs ~rd ~rs1 ) ~imm
 let lwu ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.lwu ~rd ~rs1 ) ~imm
 let ld ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.ld ~rd ~rs1 ) ~imm
 let sd ~rs1 ~rs2 ~imm = Imm.s_imm (Asm_raw.sd ~rs1 ~rs2 ) ~imm
@@ -854,18 +836,10 @@ let suite f n = [
     ~pp:PP.(QCRV.PP.tuple2 int int) ~limit:2
     Arbitrary.(QCRV.tuple2 (int 16) (int 16)) 
     (fun (pred, succ) -> f `fence (Asm_raw.fence ~pred ~succ)));
-  QCheck.( mk_test ~name:"@rdcycle" ~n 
-    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
-    Arbitrary.(QCRV.tuple1 (int 32)) 
-    (fun (rd) -> f `_rdcycle (Asm_raw._rdcycle ~rd)));
-  QCheck.( mk_test ~name:"@rdtime" ~n 
-    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
-    Arbitrary.(QCRV.tuple1 (int 32)) 
-    (fun (rd) -> f `_rdtime (Asm_raw._rdtime ~rd)));
-  QCheck.( mk_test ~name:"@rdinstret" ~n 
-    ~pp:PP.(QCRV.PP.tuple1 int) ~limit:2
-    Arbitrary.(QCRV.tuple1 (int 32)) 
-    (fun (rd) -> f `_rdinstret (Asm_raw._rdinstret ~rd)));
+  QCheck.( mk_test ~name:"csrrs" ~n 
+    ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
+    Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 
+    (fun (rd, rs1, imm12) -> f `csrrs (Asm_raw.csrrs ~rd ~rs1 ~imm12)));
   QCheck.( mk_test ~name:"lwu" ~n 
     ~pp:PP.(QCRV.PP.tuple3 int int int) ~limit:2
     Arbitrary.(QCRV.tuple3 (int 32) (int 32) (int 4096)) 

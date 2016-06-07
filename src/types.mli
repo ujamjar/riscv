@@ -33,6 +33,8 @@ module type I = sig
     val get : arr -> int -> t
     val set : arr -> int -> t -> unit
   end
+  val to_string : t -> string
+  val to_hex : t -> string
 end
 
 module I : I with type t = int32
@@ -40,6 +42,7 @@ module I : I with type t = int32
 module type D = sig
   include I
   val of_i : I.t -> t
+  val to_i : t -> I.t 
 end
 
 module Fields : sig

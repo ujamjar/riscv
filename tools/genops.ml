@@ -7,9 +7,7 @@ let modules = [
   "rv32f"; "rv64f"; 
   "rv32d"; "rv64d";
   "rvc";
-  "rvsys";
-  "rvpseudo";
-  "rvcustom";
+  "rvsuper"; "rvmachine";
 ]
 
 let mask p =
@@ -96,6 +94,8 @@ let write_fields f instrs =
 
 let write_module m = 
 
+  printf "generating module: %s\n" m;
+
   let ops = open_in ("tools/" ^ m ^ ".ops") in
   let mli = open_out ("src/" ^ String.uppercase m ^ ".mli") in 
   let ml = open_out ("src/" ^ String.uppercase m ^ ".ml") in 
@@ -148,6 +148,6 @@ let write_module m =
   close_out ml;
   close_out mli
 
-let run () = List.iter write_module modules
+let () = List.iter write_module modules
 
 

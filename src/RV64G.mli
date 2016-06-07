@@ -10,7 +10,7 @@ module T : sig
     | RV32A.T.t
     | RV32F.T.t
     | RV32D.T.t
-    | RVSYS.T.t
+    (*| RVSYS.T.t*)
   ]
 
   val mask_match : (t * (Int32.t * Int32.t)) list
@@ -33,7 +33,7 @@ module Asm : sig
   include module type of RV32A.Asm
   include module type of RV32F.Asm
   include module type of RV32D.Asm
-  include module type of RVSYS.Asm
+  (*include module type of RVSYS.Asm*)
 end
 
 module Test : sig

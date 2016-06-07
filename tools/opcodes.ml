@@ -300,16 +300,17 @@ let write_qcheck_suite f instrs =
     let nargs = List.length args in
     if nargs <> 0 then begin
       let sep c l = List.fold_left (fun a b -> a ^ c ^ b) (List.hd l) (List.tl l) in
-      let tuple = sep ", " (List.map (function (Field((_,n,_),_)) -> n) args) in
+      let tuple = sep ", " (List.map (function (Field((_,n,_),_)) -> n | _ -> failwith "") args) in
       let liftpp = "tuple" ^ string_of_int nargs ^ " " ^
-        sep " " (List.map (function (Field((_,n,(h,l)),_)) -> sprintf "int") args)
+        sep " " (List.map (function (Field((_,n,(h,l)),_)) -> sprintf "int" | _ -> failwith "") args)
       in
       let lift = "tuple" ^ string_of_int nargs ^ " " ^
         sep " " (List.map 
-          (function (Field((_,n,(h,l)),_)) -> sprintf "(int %i)" (1 lsl (h-l+1))) 
+          (function (Field((_,n,(h,l)),_)) -> sprintf "(int %i)" (1 lsl (h-l+1))
+                  | _ -> failwith "") 
           args)
       in
-      let args = sep " " (List.map (function (Field((_,n,_),_)) -> "~" ^ n) args) in
+      let args = sep " " (List.map (function (Field((_,n,_),_)) -> "~" ^ n | _ -> failwith "") args) in
       fprintf f 
 "  QCheck.( mk_test ~name:\"%s\" ~n 
     ~pp:PP.(QCRV.PP.%s) ~limit:2

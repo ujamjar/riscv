@@ -1,5 +1,5 @@
 # OASIS_START
-# DO NOT EDIT (digest: eeb2cef4a42ae1f6b9414e9f07738204)
+# DO NOT EDIT (digest: 347677ffd9d319ef781d8561271cabb9)
 Types
 Mem
 Super
@@ -18,9 +18,8 @@ RV64G
 RV64I
 RV64M
 RVC
-RVCUSTOM
-RVPSEUDO
-RVSYS
+RVMACHINE
+RVSUPER
 Load_elf
 Cpu
 Instr
