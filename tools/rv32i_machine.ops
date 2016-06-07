@@ -1,0 +1,2 @@
+include tools/rv32i.ops
+include tools/rvmachine.ops

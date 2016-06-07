@@ -163,19 +163,22 @@ let spec s =
 let tokens s = 
   split (char ' ') (comment s)
 
-let parse s = 
+let rec parse s = 
   let tokens = tokens s in
   match tokens with
-  | [] -> None
-  | h::t -> Some(h,List.map spec t)
+  | [] -> `empty
+  | "include"::[f] -> `incl (load f)
+  | h::t -> `line(h,List.map spec t)
 
-let load f = 
+and load f = 
+  let f = open_in f in
   let rec p line instrs = 
     match input_line f with
     | _ as s -> begin
       match parse s with
-      | Some(x) -> x :: p (line+1) instrs
-      | None -> p (line+1) instrs
+      | `line(x) -> x :: p (line+1) instrs
+      | `incl(x) -> x @ p (line+1) instrs
+      | `empty -> p (line+1) instrs
       | exception e -> begin
         Printf.eprintf "exn[%i]: %s\n" line (Printexc.to_string e);
         exit 1
@@ -184,6 +187,7 @@ let load f =
     | exception _ -> List.rev instrs
   in
   let instrs = p 1 [] in
+  close_in f;
   instrs
 
 let map_name n = 

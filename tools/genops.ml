@@ -8,6 +8,8 @@ let modules = [
   "rv32d"; "rv64d";
   "rvc";
   "rvsuper"; "rvmachine";
+  (* derived machine specs *)
+  "rv32i_machine";
 ]
 
 let mask p =
@@ -96,7 +98,7 @@ let write_module m =
 
   printf "generating module: %s\n" m;
 
-  let ops = open_in ("tools/" ^ m ^ ".ops") in
+  let ops = "tools/" ^ m ^ ".ops" in
   let mli = open_out ("src/" ^ String.uppercase m ^ ".mli") in 
   let ml = open_out ("src/" ^ String.uppercase m ^ ".ml") in 
 
@@ -144,7 +146,6 @@ let write_module m =
   Opcodes.write_qcheck_suite ml instrs;
   fprintf ml "end\n\n";
 
-  close_in ops;
   close_out ml;
   close_out mli
 
