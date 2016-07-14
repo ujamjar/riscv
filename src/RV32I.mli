@@ -42,7 +42,6 @@ type t = [
 | `fence_i
 | `ecall
 | `ebreak
-| `csrrs
 ] deriving(Enum,Bounded,Show)
 
 val name : string
@@ -100,7 +99,6 @@ val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
 val ecall : Types.I.t
 val ebreak : Types.I.t
-val csrrs : rd:int -> rs1:int -> imm12:int -> Types.I.t
 
 end
 
@@ -147,7 +145,6 @@ val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
 val ecall : Types.I.t
 val ebreak : Types.I.t
-val csrrs : rd:int -> rs1:int -> imm:int -> Types.I.t
 
 end
 

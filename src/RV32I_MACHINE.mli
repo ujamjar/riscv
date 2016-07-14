@@ -42,14 +42,14 @@ type t = [
 | `fence_i
 | `ecall
 | `ebreak
-| `csrrs
+| `eret
+| `wfi
 | `csrrw
+| `csrrs
 | `csrrc
 | `csrrwi
 | `csrrsi
 | `csrrci
-| `eret
-| `wfi
 ] deriving(Enum,Bounded,Show)
 
 val name : string
@@ -107,14 +107,14 @@ val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
 val ecall : Types.I.t
 val ebreak : Types.I.t
-val csrrs : rd:int -> rs1:int -> imm12:int -> Types.I.t
+val eret : Types.I.t
+val wfi : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm12:int -> Types.I.t
+val csrrs : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrc : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrwi : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrsi : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrci : rd:int -> rs1:int -> imm12:int -> Types.I.t
-val eret : Types.I.t
-val wfi : Types.I.t
 
 end
 
@@ -161,14 +161,14 @@ val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
 val ecall : Types.I.t
 val ebreak : Types.I.t
-val csrrs : rd:int -> rs1:int -> imm:int -> Types.I.t
+val eret : Types.I.t
+val wfi : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm:int -> Types.I.t
+val csrrs : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrc : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrwi : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrsi : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrci : rd:int -> rs1:int -> imm:int -> Types.I.t
-val eret : Types.I.t
-val wfi : Types.I.t
 
 end
 

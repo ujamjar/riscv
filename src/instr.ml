@@ -329,7 +329,7 @@ module Make(T : T) = struct
       | `ebreak -> begin
         raise RISCV_breakpoint (* what about PC? *)
       end
-      | `csrrs -> raise RISCV_instruction_not_yet_implemented
+      (*| `csrrs -> raise RISCV_instruction_not_yet_implemented*)
       | _ -> raise RISCV_illegal_instruction
 
   end
