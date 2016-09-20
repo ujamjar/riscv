@@ -20,5 +20,6 @@ depends: [
   "elf"
   "qcheck"
   "deriving"
+  "re"
 ]
 available: [ ocaml-version >= "4.01.0" ]
