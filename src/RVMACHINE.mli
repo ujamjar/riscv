@@ -1,7 +1,10 @@
 module T : sig
 
 type t = [
-| `eret
+| `uret
+| `sret
+| `hret
+| `mret
 | `wfi
 | `csrrw
 | `csrrs
@@ -25,7 +28,10 @@ end
 
 module Asm_raw : sig
 
-val eret : Types.I.t
+val uret : Types.I.t
+val sret : Types.I.t
+val hret : Types.I.t
+val mret : Types.I.t
 val wfi : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrs : rd:int -> rs1:int -> imm12:int -> Types.I.t
@@ -38,7 +44,10 @@ end
 
 module Asm : sig
 
-val eret : Types.I.t
+val uret : Types.I.t
+val sret : Types.I.t
+val hret : Types.I.t
+val mret : Types.I.t
 val wfi : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrs : rd:int -> rs1:int -> imm:int -> Types.I.t

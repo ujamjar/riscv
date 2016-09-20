@@ -42,7 +42,10 @@ type t = [
 | `fence_i
 | `ecall
 | `ebreak
-| `eret
+| `uret
+| `sret
+| `hret
+| `mret
 | `wfi
 | `csrrw
 | `csrrs
@@ -96,8 +99,11 @@ let mask_match = [
   `fence_i , (0x0000707fl,0x0000100fl);
   `ecall   , (0xffffffffl,0x00000073l);
   `ebreak  , (0xffffffffl,0x00100073l);
-  `eret    , (0xffffffffl,0x10000073l);
-  `wfi     , (0xffffffffl,0x10200073l);
+  `uret    , (0xffffffffl,0x00200073l);
+  `sret    , (0xffffffffl,0x10200073l);
+  `hret    , (0xffffffffl,0x20200073l);
+  `mret    , (0xffffffffl,0x30200073l);
+  `wfi     , (0xffffffffl,0x10500073l);
   `csrrw   , (0x0000707fl,0x00001073l);
   `csrrs   , (0x0000707fl,0x00002073l);
   `csrrc   , (0x0000707fl,0x00003073l);
@@ -201,8 +207,14 @@ let pretty i =
     ("ecall")
   | `ebreak   ->
     ("ebreak")
-  | `eret     ->
-    ("eret")
+  | `uret     ->
+    ("uret")
+  | `sret     ->
+    ("sret")
+  | `hret     ->
+    ("hret")
+  | `mret     ->
+    ("mret")
   | `wfi      ->
     ("wfi")
   | `csrrw    ->
@@ -261,8 +273,11 @@ let fields =
     (`fence_i, [ Range((31,28),Ignore); Range((27,20),Ignore); Range((19,15),Ignore); Range((14,12),Int(1)); Range((11,7),Ignore); Range((6,2),Int(3)); Range((1,0),Int(3)); ]);
     (`ecall, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(0)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
     (`ebreak, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(1)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
-    (`eret, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(256)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
-    (`wfi, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(258)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`uret, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(2)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`sret, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(258)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`hret, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(514)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`mret, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(770)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
+    (`wfi, [ Range((11,7),Int(0)); Range((19,15),Int(0)); Range((31,20),Int(261)); Range((14,12),Int(0)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
     (`csrrw, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(1)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
     (`csrrs, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(2)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
     (`csrrc, [ Field((`rd,"rd",(11,7)), Nothing); Field((`rs1,"rs1",(19,15)), Nothing); Field((`imm12,"imm12",(31,20)), Nothing); Range((14,12),Int(3)); Range((6,2),Int(28)); Range((1,0),Int(3)); ]);
@@ -517,11 +532,20 @@ let ecall = Types.I.(
 let ebreak = Types.I.(
   0x100073l)
 
-let eret = Types.I.(
-  0x10000073l)
+let uret = Types.I.(
+  0x200073l)
+
+let sret = Types.I.(
+  0x10200073l)
+
+let hret = Types.I.(
+  0x20200073l)
+
+let mret = Types.I.(
+  0x30200073l)
 
 let wfi = Types.I.(
-  0x10200073l)
+  0x10500073l)
 
 let csrrw ~rd ~rs1 ~imm12 = Types.I.(
   (sll ((of_int rd) &: 0x1fl) 7) |:
@@ -604,7 +628,10 @@ let fence = Asm_raw.fence
 let fence_i = Asm_raw.fence_i
 let ecall = Asm_raw.ecall
 let ebreak = Asm_raw.ebreak
-let eret = Asm_raw.eret
+let uret = Asm_raw.uret
+let sret = Asm_raw.sret
+let hret = Asm_raw.hret
+let mret = Asm_raw.mret
 let wfi = Asm_raw.wfi
 let csrrw ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrw ~rd ~rs1 ) ~imm
 let csrrs ~rd ~rs1 ~imm = Imm.i_imm (Asm_raw.csrrs ~rd ~rs1 ) ~imm

@@ -42,7 +42,10 @@ type t = [
 | `fence_i
 | `ecall
 | `ebreak
-| `eret
+| `uret
+| `sret
+| `hret
+| `mret
 | `wfi
 | `csrrw
 | `csrrs
@@ -107,7 +110,10 @@ val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
 val ecall : Types.I.t
 val ebreak : Types.I.t
-val eret : Types.I.t
+val uret : Types.I.t
+val sret : Types.I.t
+val hret : Types.I.t
+val mret : Types.I.t
 val wfi : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm12:int -> Types.I.t
 val csrrs : rd:int -> rs1:int -> imm12:int -> Types.I.t
@@ -161,7 +167,10 @@ val fence : pred:int -> succ:int -> Types.I.t
 val fence_i : Types.I.t
 val ecall : Types.I.t
 val ebreak : Types.I.t
-val eret : Types.I.t
+val uret : Types.I.t
+val sret : Types.I.t
+val hret : Types.I.t
+val mret : Types.I.t
 val wfi : Types.I.t
 val csrrw : rd:int -> rs1:int -> imm:int -> Types.I.t
 val csrrs : rd:int -> rs1:int -> imm:int -> Types.I.t
