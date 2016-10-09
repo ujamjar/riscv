@@ -1,5 +1,3 @@
-# OASIS_START
-# DO NOT EDIT (digest: fa2eda127dfd3570c35d7acb5497a304)
 version = "0.1"
 description = "RISCV instruction set tools"
 requires = "bytes elf qcheck deriving"
@@ -8,5 +6,3 @@ archive(byte, plugin) = "Riscv.cma"
 archive(native) = "Riscv.cmxa"
 archive(native, plugin) = "Riscv.cmxs"
 exists_if = "Riscv.cma"
-# OASIS_STOP
-

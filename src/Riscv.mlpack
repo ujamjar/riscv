@@ -1,5 +1,3 @@
-# OASIS_START
-# DO NOT EDIT (digest: 8ef9d9cce210636ff9a8539f369f6c95)
 Types
 Mem
 Super
@@ -25,4 +23,3 @@ Load_elf
 Cpu
 Instr
 Sim
-# OASIS_STOP
