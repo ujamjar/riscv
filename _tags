@@ -1,0 +1,6 @@
+"src": include
+"tools": include
+<tools/*.{ml,byte}>: package(re)
+<src/*>: package(qcheck), syntax(camlp4o), package(deriving), package(deriving.syntax), package(elf)
+<src/*.cmx> and not "src/Riscv.cmx": for-pack(Riscv)
+"test": -traverse

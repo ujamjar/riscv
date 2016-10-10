@@ -14,8 +14,12 @@ remove: [
   [make "uninstall"]
 ]
 depends: [
-  "ocamlfind"
+  "ocamlfind" {build}
+  "ocamlbuild" {build}
+  "topkg" {build}
   "base-bytes"
+  "astring"
+  "rresult"
   "camlp4"
   "elf"
   "qcheck"

@@ -1,13 +1,29 @@
 #!/usr/bin/env ocaml
 #use "topfind"
-#require "topkg,astring"
+#require "topkg,astring,rresult"
 open Topkg
 
-let ctypes = Conf.with_pkg ~default:false "ctypes"
-let ctypes_foreign = Conf.with_pkg ~default:false "ctypes-foreign"
-let camlp4 = Conf.with_pkg ~default:false "camlp4"
-let js_of_ocaml = Conf.with_pkg ~default:false "js_of_ocaml"
-let lwt = Conf.with_pkg ~default:false "lwt"
+(* given a module name (and file path), try to figure out if
+   the corresponding .mli file is capitalized or not. *)
+let mli_of_module ?(check_ml=false) dir m = 
+  let check f ext = 
+    let m' = f m in
+    let name = Fpath.(dir // m' ^ ext) in
+    match OS.File.exists name with
+    | Ok true -> Ok(Some(m'))
+    | Ok false -> Ok(None)
+    | Error e -> Error e
+  in
+  let (>>:) a (c, f, ext) = a >>= function
+    | Some(m) as x -> Ok x
+    | None -> if c then check f ext else Ok None
+  in
+  (Ok(None) >>: (true, Astring.String.Ascii.uncapitalize, ".mli")
+            >>: (true, Astring.String.Ascii.capitalize, ".mli")
+            >>: (check_ml, Astring.String.Ascii.uncapitalize, ".ml")
+            >>: (check_ml, Astring.String.Ascii.capitalize, ".ml")
+            >>= function None -> Error(`Msg("mli_of_module: " ^ m))
+                       | Some(m) -> Ok m)
 
 let mlpack ?cond name =  
   let dir = Fpath.dirname name in
@@ -30,8 +46,13 @@ let mlpack ?cond name =
   let intf modls = (* install interfaces for modules in the library - .cmti/.mli *)
     Ok (List.map 
       (fun m ->
-         let name = Fpath.(dir // Astring.String.Ascii.uncapitalize m) in
-           Pkg.lib ?cond ~exts:Exts.(exts [".cmti"; ".mli"]) name
+        let cond, m = 
+          match mli_of_module dir m with
+          | Error _ -> Some(false), m
+          | Ok m -> cond, m
+        in
+        let name = Fpath.(dir // m) in
+        Pkg.lib ?cond ~exts:Exts.(exts [".cmti"; ".mli"]) name
       ) modls)
   in
   let name = Fpath.(dir // base) in
@@ -46,18 +67,8 @@ let mlpack ?cond name =
   (modls >>= intf >>= pkg) |> Log.on_error_msg ~use:(fun () -> [])
 
 let () = 
-  Pkg.describe "hardcaml" @@ fun c ->
-  let ctypes = Conf.value c ctypes && Conf.value c ctypes_foreign in
-  let camlp4 = Conf.value c camlp4 in
-  let js_of_ocaml = Conf.value c js_of_ocaml in
-  let lwt = Conf.value c lwt in
+  Pkg.describe "riscv" @@ fun c ->
   Ok (
-    mlpack "src/HardCaml" @
-    mlpack "dynlink/HardCamlDynlink" @
-    mlpack ~cond:(js_of_ocaml && lwt) "js/HardCamlJS" @
-    mlpack ~cond:ctypes "csim/HardCamlCSim" @
-    (if camlp4 then 
-       [ Pkg.lib ~exts:Exts.(exts [".cmo"; ".cmx"; ".cmi"; ".cmti"]) "syntax/pa_hardcaml" ] 
-     else [])
+    mlpack "src/Riscv" 
   )
 

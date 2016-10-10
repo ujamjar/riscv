@@ -1,0 +1,10 @@
+SRC src
+SRC tools
+PKG re
+PKG topkg
+PKG elf
+PKG qcheck
+PKG deriving
+PKG re
+PKG astring
+PKG rresult

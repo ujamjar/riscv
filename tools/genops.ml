@@ -99,8 +99,8 @@ let write_module m =
   printf "generating module: %s\n" m;
 
   let ops = "tools/" ^ m ^ ".ops" in
-  let mli = open_out ("src/" ^ String.uppercase m ^ ".mli") in 
-  let ml = open_out ("src/" ^ String.uppercase m ^ ".ml") in 
+  let mli = open_out ("src/" ^ String.uppercase_ascii m ^ ".mli") in 
+  let ml = open_out ("src/" ^ String.uppercase_ascii m ^ ".ml") in 
 
   let instrs = Opcodes.load ops in
 
@@ -149,6 +149,13 @@ let write_module m =
   close_out ml;
   close_out mli
 
-let () = List.iter write_module modules
+let modl = ref ""
+let () = Arg.(parse 
+  [
+    "-m", Set_string modl, "module to generate";
+  ] (fun _ -> ()) "")
 
+let () = 
+  if !modl <> "" then write_module !modl 
+  else List.iter write_module modules 
 
