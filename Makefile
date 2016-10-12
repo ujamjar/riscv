@@ -1,24 +1,14 @@
-.PHONY: clean all install uninstall 
+.PHONY: clean all build
 
-all: setup.data
-	ocaml setup.ml -build
+all: build
 
-setup.ml:
-	oasis setup
-
-setup.data: setup.ml
-	ocaml setup.ml -configure
-
-install: all
-	ocaml setup.ml -install
-
-uninstall: 
-	ocamlfind remove riscv
+build:
+	ocaml pkg/pkg.ml build
 
 clean:
-	ocaml setup.ml -clean
+	ocamlbuild -clean
 	- find . -name "*~" | xargs rm
 
-distclean:
-	ocaml setup.ml -distclean
+gen:
+	ocamlbuild genops.byte
 
